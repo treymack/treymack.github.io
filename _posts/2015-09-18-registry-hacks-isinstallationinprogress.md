@@ -9,6 +9,8 @@ I was doing a repair on Visual Studio 2015 and it seemed to be stuck at the end,
 
 <blockquote>Repair/Modify operation did not finish successfully. Please repair Visual Studio before continuing. You may continue to run Visual Studio, but operation may not be reliable.</blockquote>
 
+<!--more-->
+
 But I had work to do and was pretty confident that VS in its current state would take me through the day. I had to jump between a couple different projects that day and each time I would see:
 
 <img src="/images/vs2015-setup-error.png" alt="Repair/Modify Image" />

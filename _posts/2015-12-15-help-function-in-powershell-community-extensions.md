@@ -13,6 +13,8 @@ categories: powershell
 
 When I run `git log` I can count on using <code>d</code> to page down and <code>u</code> to page up, <code>/</code> to search, etc.
 
+<!--more-->
+
 While learning and using PowerShell, I fire up the <code>Get-Help</code> CmdLet quite often to learn details of a particular CmdLet I'm interested in. <code>Get-Help</code> by itself firehoses the data to the console too fast to read, so you'll have to scroll up. A better solution is to pipe the results to <code><strong>more</strong></code>, which allows you to hit <code>Enter</code> to scroll one line at a time or <code>space</code> to scroll a page at a time. But what about scrolling back up? I could do that with <code><strong>less</strong></code>.
 
 {% highlight powershell %}

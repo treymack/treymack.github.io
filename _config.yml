@@ -11,6 +11,7 @@ twitter_username: trey_mack
 github_username:  treymack
 permalink: /blog/:title
 future: false
+excerpt_separator: <!--more-->
 
 # Build settings
 markdown: kramdown

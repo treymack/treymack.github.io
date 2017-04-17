@@ -9,9 +9,11 @@ categories: testing
 
 There's more than one way to skin an assertion. The thing to keep in mind is how the next developer (obligatory "or you in 6 months") is going to use the information if an assertion fails.
 
+<!--more-->
+
 We'll be using MSTest to describe the situation, but this is just as valid in NUnit.
 
-### The Land of Confusion
+# The Land of Confusion
 
 You run your test suite and spot an error. Let's dig into the error message.
 
@@ -25,7 +27,7 @@ Assert.IsTrue(actual.Count == 1);
 
 This doesn't tell us much. It's certianly better than nothing, because at least we know there's something to investigate. But what was the value of `actual.Count`? `0`? `2`? A `million bajillion`? We can't tell from the error message.
 
-### An Improvement
+# An Improvement
 
 All XUnit testing frameworks I know of have a more explicit way to test against a certain expected value. In their most basic form, it's usually a call to a method like `Assert.AreEqual`. Let's switch to that.
 
@@ -43,7 +45,7 @@ That's about as good as we can do since we're discovering the error and don't kn
 
 If we could turn back time though...
 
-### Don't Make Me Think
+# Don't Make Me Think
 
 We have all this context when we're writing a test, let's forward that info to our future selves. Just what are we doing here?
 
@@ -56,7 +58,7 @@ Assert.AreEqual(1, actual.Count,
 
 Future self thanks past self. Maintenance time cut in half, at least.
 
-### Is There More?
+# Is There More?
 
 From what I've seen, this is about as good as you can do with the build-in assertion libraries in MSTest. NUnit has its [Constraint Model](https://github.com/nunit/docs/wiki/Constraint-Model) (Assert.That) that can allow for more expressive asserts.
 
