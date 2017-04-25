@@ -15,7 +15,14 @@ layout: default
           <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
         </h1>
 
-        {% if post.excerpt %} {{ post.excerpt }} {% else %} {{ post.content | truncatewords: 50 | strip_html }} {% endif %}
+        {% if post.excerpt %}
+            {{ post.excerpt }}
+            {% if post.content contains '<!--more-->' %}
+                <a class="more-link" href="{{ post.url | prepend: site.baseurl }}">more ...</a>
+            {% endif %}
+        {% else %}
+            {{ post.content | truncatewords: 50 | strip_html }}
+        {% endif %}
       </li>
     {% endfor %}
   </ul>

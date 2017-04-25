@@ -15,3 +15,8 @@ excerpt_separator: <!--more-->
 
 # Build settings
 markdown: kramdown
+
+# Extensions
+gems:
+  - jekyll-sitemap
+

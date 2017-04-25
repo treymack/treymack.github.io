@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Generating AssemblyInfo with PowerShell"
+title:  "Generating AssemblyInfo Content with PowerShell"
 date:   2017-04-07
 categories: powershell deploymentpipeline
 ---
@@ -11,11 +11,13 @@ categories: powershell deploymentpipeline
 
 I'll take AssemblyInfo.cs as an example here, but really this technique can be used to generate any type of content from PowerShell scripts.
 
-# AssemblyInfo split across 2 files
+<!--more-->
 
-# fields that change with each build
+# Fields That Change With Each Build
 
-# source location in generated file
+# AssemblyInfo Split Across 2 files
 
-# optionally use a CommonAssemblyInfo
+# Source Location in Generated File
+
+# CommonAssemblyInfo
 
