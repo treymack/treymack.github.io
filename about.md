@@ -8,8 +8,8 @@ permalink: /about/
 
 {{ site.description }}
 
-Oxford comma user.
+Oxford comma fan.
 
-Not much of a hugger.
+Strong opinions, weakly held.
 
-Opinions are my own.
+Neil deGrasse Tyson.
