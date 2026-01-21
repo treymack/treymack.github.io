@@ -1,5 +1,5 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import { SITE_TITLE } from '../consts';
@@ -13,6 +13,28 @@ function getPostUrl(postId: string) {
   const title = postId.replace(/^\d{4}-\d{2}-\d{2}-/, '').replace(/\.mdx?$/, '');
   return `/blog/${title}`;
 }
+
+// Process posts with excerpts
+const postsWithExcerpts = await Promise.all(
+  posts.map(async (post) => {
+    const { remarkPluginFrontmatter } = await render(post);
+    const body = post.body || '';
+
+    let excerpt = '';
+    let hasMore = false;
+
+    if (body.includes('<!--more-->')) {
+      excerpt = body.split('<!--more-->')[0];
+      hasMore = true;
+    }
+
+    return {
+      ...post,
+      excerpt,
+      hasMore,
+    };
+  })
+);
 ---
 
 <BaseLayout title={SITE_TITLE}>
@@ -21,7 +43,7 @@ function getPostUrl(postId: string) {
 
     <ul class="post-list list-none p-0">
       {
-        posts.map((post) => (
+        postsWithExcerpts.map((post) => (
           <li class="mb-8">
             <span class="post-meta text-gray-600 text-sm">
               <FormattedDate date={post.data.date} />
@@ -32,6 +54,17 @@ function getPostUrl(postId: string) {
                 {post.data.title}
               </a>
             </h2>
+
+            {post.excerpt && (
+              <div class="post-excerpt text-gray-700">
+                <p set:html={post.excerpt} />
+                {post.hasMore && (
+                  <a href={getPostUrl(post.id)} class="more-link text-blue-600 hover:text-blue-800">
+                    more ...
+                  </a>
+                )}
+              </div>
+            )}
           </li>
         ))
       }
