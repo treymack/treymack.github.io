@@ -1,6 +1,6 @@
 # treymack.github.io
 
-Personal blog hosted at <http://treymack.github.io>
+Personal blog hosted at <http://treymack.github.io> and <https://treymack.com>
 
 ## Tech Stack
 
@@ -81,7 +81,7 @@ The deployment workflow:
 
 ## Project Structure
 
-```
+```monospace
 ├── public/              # Static assets (images, favicon, etc.)
 ├── src/
 │   ├── components/      # Astro components (Header, Footer, etc.)
