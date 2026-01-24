@@ -103,4 +103,37 @@ test.describe("Site pages", () => {
     await page.click('a[href="/"]');
     await expect(page).toHaveURL(/\/$/);
   });
+
+  test("header is sticky and visible after scrolling", async ({ page }) => {
+    await page.goto("/");
+    const header = page.locator("header.site-header");
+
+    // Verify header has sticky positioning
+    const position = await header.evaluate(
+      (el) => getComputedStyle(el).position,
+    );
+    expect(position).toBe("sticky");
+
+    // Scroll down the page
+    await page.evaluate(() => window.scrollBy(0, 500));
+
+    // Header should still be visible at top
+    await expect(header).toBeVisible();
+    const boundingBox = await header.boundingBox();
+    expect(boundingBox?.y).toBe(0);
+  });
+
+  test("header is sticky on mobile viewport", async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 667 }); // iPhone SE size
+    await page.goto("/");
+    const header = page.locator("header.site-header");
+
+    // Scroll down
+    await page.evaluate(() => window.scrollBy(0, 300));
+
+    // Header should still be visible at top
+    await expect(header).toBeVisible();
+    const boundingBox = await header.boundingBox();
+    expect(boundingBox?.y).toBe(0);
+  });
 });
