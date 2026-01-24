@@ -1,0 +1,27 @@
+---
+import { type CollectionEntry, getCollection, render } from "astro:content";
+import PostLayout from "../../layouts/PostLayout.astro";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  return posts.map((post) => {
+    // Extract the title from the filename (e.g., "2017-06-30-get-adobject-pscx-memberof.md" -> "get-adobject-pscx-memberof")
+    const title = post.id
+      .replace(/^\d{4}-\d{2}-\d{2}-/, "")
+      .replace(/\.mdx?$/, "");
+    return {
+      params: { slug: title },
+      props: post,
+    };
+  });
+}
+
+type Props = CollectionEntry<"blog">;
+
+const post = Astro.props;
+const { Content } = await render(post);
+---
+
+<PostLayout {...post.data}>
+  <Content />
+</PostLayout>

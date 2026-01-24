@@ -1,0 +1,90 @@
+---
+import { getCollection } from "astro:content";
+import { marked } from "marked";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import FormattedDate from "../components/FormattedDate.astro";
+import { SITE_TITLE } from "../consts";
+
+const posts = (await getCollection("blog")).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+
+// Helper to get post URL
+function getPostUrl(postId: string) {
+  const title = postId
+    .replace(/^\d{4}-\d{2}-\d{2}-/, "")
+    .replace(/\.mdx?$/, "");
+  return `/blog/${title}`;
+}
+
+// Process posts with excerpts
+const postsWithExcerpts = await Promise.all(
+  posts.map(async (post) => {
+    const body = post.body || "";
+
+    let excerpt = "";
+    let excerptHtml = "";
+    let hasMore = false;
+
+    if (body.includes("<!--more-->")) {
+      excerpt = body.split("<!--more-->")[0];
+      excerptHtml = await marked.parse(excerpt);
+      hasMore = true;
+    }
+
+    return {
+      ...post,
+      excerpt,
+      excerptHtml,
+      hasMore,
+    };
+  }),
+);
+---
+
+<BaseLayout title={SITE_TITLE}>
+  <div class="home">
+    <h1 class="page-heading text-2xl font-bold mb-6">Posts</h1>
+
+    <ul class="post-list list-none p-0">
+      {
+        postsWithExcerpts.map((post) => (
+          <li class="mb-8">
+            <span class="post-meta text-gray-600 text-sm">
+              <FormattedDate date={post.data.date} />
+            </span>
+
+            <h2 class="text-2xl font-semibold my-2">
+              <a
+                href={getPostUrl(post.id)}
+                class="post-link text-blue-600 hover:text-blue-800 no-underline"
+              >
+                {post.data.title}
+              </a>
+            </h2>
+
+            {post.excerptHtml && (
+              <div class="post-excerpt prose prose-lg max-w-none text-gray-700">
+                <Fragment set:html={post.excerptHtml} />
+                {post.hasMore && (
+                  <a
+                    href={getPostUrl(post.id)}
+                    class="more-link text-blue-600 hover:text-blue-800"
+                  >
+                    more ...
+                  </a>
+                )}
+              </div>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="rss-subscribe text-gray-600">
+      subscribe <a href="/feed.xml" class="text-blue-600 hover:text-blue-800"
+        >via RSS</a
+      >
+    </p>
+  </div>
+</BaseLayout>
