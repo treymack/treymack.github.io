@@ -1,22 +1,41 @@
 ---
-import BaseLayout from './BaseLayout.astro';
-import FormattedDate from '../components/FormattedDate.astro';
+import { Image } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+import BaseLayout from "./BaseLayout.astro";
+import FormattedDate from "../components/FormattedDate.astro";
 
-interface Props {
-  title: string;
-  date: Date;
-  description?: string;
-}
+type Props = CollectionEntry<"blog">["data"];
 
-const { title, date, description } = Astro.props;
+const { title, date, description, updatedDate, heroImage } = Astro.props;
 ---
 
 <BaseLayout title={title} description={description}>
   <div class="post">
+    {
+      heroImage && (
+        <div class="hero-image mb-8">
+          <Image
+            width={720}
+            height={360}
+            src={heroImage}
+            alt=""
+            class="rounded-xl shadow-lg mx-auto"
+          />
+        </div>
+      )
+    }
+
     <header class="post-header mb-8">
       <h1 class="post-title text-4xl font-bold mb-2">{title}</h1>
       <p class="post-meta text-gray-600">
         <FormattedDate date={date} />
+        {
+          updatedDate && (
+            <span class="italic ml-2">
+              (Updated <FormattedDate date={updatedDate} />)
+            </span>
+          )
+        }
       </p>
     </header>
 
