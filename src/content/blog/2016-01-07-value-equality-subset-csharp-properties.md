@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Value Equality from a Subset of Properties in C#"
-date:   Jan 7, 2016
+date: 2016-01-07
 categories: csharp
 ---
 

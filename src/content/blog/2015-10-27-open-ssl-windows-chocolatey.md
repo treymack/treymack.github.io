@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Install OpenSSL on Windows using Chocolatey"
-date:   Oct 28, 2015
+date: 2015-10-28
 categories: chocolatey powershell
 ---
 

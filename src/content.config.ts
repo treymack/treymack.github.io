@@ -1,6 +1,18 @@
 import { defineCollection, z } from "astro:content";
 import { glob } from "astro/loaders";
 
+// Schema for dates - YAML parser may return Date or string depending on format
+// We accept both but validate string format is yyyy-MM-dd
+const dateSchema = z
+  .union([
+    z.date(),
+    z
+      .string()
+      .regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be in yyyy-MM-dd format")
+      .transform((str) => new Date(str + "T00:00:00Z")),
+  ])
+  .refine((date) => !isNaN(date.getTime()), "Invalid date");
+
 const blog = defineCollection({
   // Load Markdown and MDX files in the `src/content/blog/` directory.
   loader: glob({ base: "./src/content/blog", pattern: "**/*.{md,mdx}" }),
@@ -9,8 +21,8 @@ const blog = defineCollection({
     z.object({
       title: z.string(),
       description: z.string().optional(),
-      date: z.coerce.date(),
-      updatedDate: z.coerce.date().optional(),
+      date: dateSchema,
+      updatedDate: dateSchema.optional(),
       heroImage: image().optional(),
       categories: z.string().optional(),
       tags: z.array(z.string()).optional(),
