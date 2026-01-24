@@ -136,4 +136,65 @@ test.describe("Site pages", () => {
     const boundingBox = await header.boundingBox();
     expect(boundingBox?.y).toBe(0);
   });
+
+  test("mobile menu toggles on hamburger click", async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 667 });
+    await page.goto("/");
+
+    const menuToggle = page.locator("#menu-toggle");
+    const mobileMenu = page.locator("#mobile-menu");
+
+    // Menu should be hidden initially
+    await expect(mobileMenu).toBeHidden();
+
+    // Click hamburger to open menu
+    await menuToggle.click();
+    await expect(mobileMenu).toBeVisible();
+    await expect(menuToggle).toHaveAttribute("aria-expanded", "true");
+
+    // Menu should contain About link
+    await expect(mobileMenu.locator('a[href="/about"]')).toBeVisible();
+
+    // Click hamburger again to close menu
+    await menuToggle.click();
+    await expect(mobileMenu).toBeHidden();
+  });
+
+  test("mobile menu closes after clicking a link", async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 667 });
+    await page.goto("/");
+
+    const menuToggle = page.locator("#menu-toggle");
+    const mobileMenu = page.locator("#mobile-menu");
+
+    // Open menu and click About link
+    await menuToggle.click();
+    await expect(mobileMenu).toBeVisible();
+
+    await mobileMenu.locator('a[href="/about"]').click();
+
+    // Should navigate to about page
+    await expect(page).toHaveURL(/\/about/);
+  });
+
+  test("mobile menu works after navigating to a post", async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 667 });
+    await page.goto("/");
+
+    // Click on a blog post link
+    await page.locator('a[href*="/blog/"]').first().click();
+    await expect(page).toHaveURL(/\/blog\//);
+
+    // Now test that the hamburger menu still works
+    const menuToggle = page.locator("#menu-toggle");
+    const mobileMenu = page.locator("#mobile-menu");
+
+    await expect(mobileMenu).toBeHidden();
+    await menuToggle.click();
+    await expect(mobileMenu).toBeVisible();
+
+    // Click About link from the post page
+    await mobileMenu.locator('a[href="/about"]').click();
+    await expect(page).toHaveURL(/\/about/);
+  });
 });

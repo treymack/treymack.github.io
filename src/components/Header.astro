@@ -14,8 +14,13 @@ import { SITE_TITLE } from "../consts";
       {SITE_TITLE}
     </a>
 
-    <nav class="site-nav">
-      <button class="menu-icon md:hidden p-2" aria-label="Toggle menu">
+    <nav class="site-nav relative">
+      <button
+        id="menu-toggle"
+        class="menu-icon md:hidden p-2"
+        aria-label="Toggle menu"
+        aria-expanded="false"
+      >
         <svg viewBox="0 0 18 15" class="w-5 h-4">
           <path
             fill="#424242"
@@ -32,13 +37,60 @@ import { SITE_TITLE } from "../consts";
         </svg>
       </button>
 
-      <div class="trigger hidden md:flex gap-4">
+      <!-- Desktop menu -->
+      <div class="hidden md:flex gap-4">
         <a
           href="/about"
           class="page-link text-gray-600 hover:text-gray-900 no-underline"
           >About</a
         >
       </div>
+
+      <!-- Mobile menu dropdown -->
+      <div
+        id="mobile-menu"
+        class="mobile-menu hidden absolute right-0 top-full mt-2 bg-white border border-gray-300 rounded-lg shadow-lg py-2 min-w-32 md:hidden"
+      >
+        <a
+          href="/about"
+          class="block px-4 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 no-underline"
+          >About</a
+        >
+      </div>
     </nav>
   </div>
 </header>
+
+<script>
+  // Use event delegation on document to handle clicks
+  // This works reliably with transition:persist since we're not adding
+  // listeners to the persisted elements themselves
+  document.addEventListener("click", (e) => {
+    const target = e.target as HTMLElement;
+    const toggle = document.getElementById("menu-toggle");
+    const menu = document.getElementById("mobile-menu");
+
+    if (!toggle || !menu) return;
+
+    // Handle hamburger button click
+    if (toggle.contains(target)) {
+      const isOpen = menu.classList.contains("hidden");
+      menu.classList.toggle("hidden");
+      toggle.setAttribute("aria-expanded", isOpen.toString());
+      return;
+    }
+
+    // Handle menu link click - close menu
+    if (menu.contains(target) && target.tagName === "A") {
+      menu.classList.add("hidden");
+      toggle.setAttribute("aria-expanded", "false");
+      return;
+    }
+
+    // Click outside - close menu
+    if (!menu.contains(target)) {
+      menu.classList.add("hidden");
+      toggle.setAttribute("aria-expanded", "false");
+    }
+  });
+</script>
