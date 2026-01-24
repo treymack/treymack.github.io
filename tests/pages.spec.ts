@@ -22,6 +22,19 @@ test.describe("Site pages", () => {
     await expect(page.locator(".post-meta")).toBeVisible();
   });
 
+  test("blockquotes render on blog post page", async ({ page }) => {
+    await page.goto("/blog/value-equality-subset-csharp-properties/");
+    const blockquote = page.locator("blockquote").first();
+    await expect(blockquote).toBeVisible();
+    await expect(blockquote).toContainText("inside that counts");
+  });
+
+  test("blockquotes render in excerpts on home page", async ({ page }) => {
+    await page.goto("/");
+    const blockquote = page.locator(".post-excerpt blockquote").first();
+    await expect(blockquote).toBeVisible();
+  });
+
   test("RSS feed is valid XML", async ({ request }) => {
     const response = await request.get("/feed.xml");
     expect(response.ok()).toBeTruthy();

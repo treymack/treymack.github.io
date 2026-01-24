@@ -1,5 +1,6 @@
 ---
 import { getCollection } from "astro:content";
+import { marked } from "marked";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import FormattedDate from "../components/FormattedDate.astro";
 import { SITE_TITLE } from "../consts";
@@ -17,23 +18,28 @@ function getPostUrl(postId: string) {
 }
 
 // Process posts with excerpts
-const postsWithExcerpts = posts.map((post) => {
-  const body = post.body || "";
+const postsWithExcerpts = await Promise.all(
+  posts.map(async (post) => {
+    const body = post.body || "";
 
-  let excerpt = "";
-  let hasMore = false;
+    let excerpt = "";
+    let excerptHtml = "";
+    let hasMore = false;
 
-  if (body.includes("<!--more-->")) {
-    excerpt = body.split("<!--more-->")[0];
-    hasMore = true;
-  }
+    if (body.includes("<!--more-->")) {
+      excerpt = body.split("<!--more-->")[0];
+      excerptHtml = await marked.parse(excerpt);
+      hasMore = true;
+    }
 
-  return {
-    ...post,
-    excerpt,
-    hasMore,
-  };
-});
+    return {
+      ...post,
+      excerpt,
+      excerptHtml,
+      hasMore,
+    };
+  }),
+);
 ---
 
 <BaseLayout title={SITE_TITLE}>
@@ -57,9 +63,9 @@ const postsWithExcerpts = posts.map((post) => {
               </a>
             </h2>
 
-            {post.excerpt && (
-              <div class="post-excerpt text-gray-700">
-                <p set:html={post.excerpt} />
+            {post.excerptHtml && (
+              <div class="post-excerpt prose prose-lg max-w-none text-gray-700">
+                <Fragment set:html={post.excerptHtml} />
                 {post.hasMore && (
                   <a
                     href={getPostUrl(post.id)}
