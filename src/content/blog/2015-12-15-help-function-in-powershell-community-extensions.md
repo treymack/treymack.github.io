@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "help Function in PowerShell Community Extensions"
-date:   Dec 15, 2015
+date: 2015-12-15
 categories: powershell
 ---
 

@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "PowerShell Automation of git-svn"
-date:   Feb 11, 2016
+date: 2016-02-11
 categories: powershell git svn git-svn
 ---
 

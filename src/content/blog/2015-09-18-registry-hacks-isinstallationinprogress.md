@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Registry Hacks! IsInstallationInProgress"
-date:   Sep 18, 2015 2:33 PM
+date: 2015-09-18
 categories: visualstudio hacks powershell
 ---
 
