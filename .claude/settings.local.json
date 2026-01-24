@@ -3,7 +3,9 @@
     "allow": [
       "Bash(python3:*)",
       "Bash(npm install:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(npx astro:*)",
+      "Bash(npx prettier:*)"
     ],
     "deny": [],
     "ask": []

@@ -23,6 +23,14 @@ docker compose -f docker-compose.dev.yml up   # Run dev server via Docker
 
 Requires Node.js 20+.
 
+## Code Style
+
+Format JS/TS/JSX/TSX/JSON/Astro files with Prettier before committing:
+
+```bash
+npx prettier --write <file>
+```
+
 ## Architecture
 
 **Tech Stack**: Astro 5 + Tailwind CSS v4 + MDX
@@ -49,7 +57,12 @@ Requires Node.js 20+.
 ---
 title: "Post Title"
 date: 2025-01-21
+description: optional SEO description
+updatedDate: 2025-01-22        # optional
+heroImage: ./hero.jpg          # optional, relative path
 categories: optional-category
+tags: ["tag1", "tag2"]         # optional
+draft: true                    # optional, default false
 ---
 ```
 

@@ -1,40 +1,39 @@
 ---
-import { getCollection, render } from 'astro:content';
-import BaseLayout from '../layouts/BaseLayout.astro';
-import FormattedDate from '../components/FormattedDate.astro';
-import { SITE_TITLE } from '../consts';
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import FormattedDate from "../components/FormattedDate.astro";
+import { SITE_TITLE } from "../consts";
 
-const posts = (await getCollection('blog')).sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+const posts = (await getCollection("blog")).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
 
 // Helper to get post URL
 function getPostUrl(postId: string) {
-  const title = postId.replace(/^\d{4}-\d{2}-\d{2}-/, '').replace(/\.mdx?$/, '');
+  const title = postId
+    .replace(/^\d{4}-\d{2}-\d{2}-/, "")
+    .replace(/\.mdx?$/, "");
   return `/blog/${title}`;
 }
 
 // Process posts with excerpts
-const postsWithExcerpts = await Promise.all(
-  posts.map(async (post) => {
-    const { remarkPluginFrontmatter } = await render(post);
-    const body = post.body || '';
+const postsWithExcerpts = posts.map((post) => {
+  const body = post.body || "";
 
-    let excerpt = '';
-    let hasMore = false;
+  let excerpt = "";
+  let hasMore = false;
 
-    if (body.includes('<!--more-->')) {
-      excerpt = body.split('<!--more-->')[0];
-      hasMore = true;
-    }
+  if (body.includes("<!--more-->")) {
+    excerpt = body.split("<!--more-->")[0];
+    hasMore = true;
+  }
 
-    return {
-      ...post,
-      excerpt,
-      hasMore,
-    };
-  })
-);
+  return {
+    ...post,
+    excerpt,
+    hasMore,
+  };
+});
 ---
 
 <BaseLayout title={SITE_TITLE}>
@@ -50,7 +49,10 @@ const postsWithExcerpts = await Promise.all(
             </span>
 
             <h2 class="text-2xl font-semibold my-2">
-              <a href={getPostUrl(post.id)} class="post-link text-blue-600 hover:text-blue-800 no-underline">
+              <a
+                href={getPostUrl(post.id)}
+                class="post-link text-blue-600 hover:text-blue-800 no-underline"
+              >
                 {post.data.title}
               </a>
             </h2>
@@ -59,7 +61,10 @@ const postsWithExcerpts = await Promise.all(
               <div class="post-excerpt text-gray-700">
                 <p set:html={post.excerpt} />
                 {post.hasMore && (
-                  <a href={getPostUrl(post.id)} class="more-link text-blue-600 hover:text-blue-800">
+                  <a
+                    href={getPostUrl(post.id)}
+                    class="more-link text-blue-600 hover:text-blue-800"
+                  >
                     more ...
                   </a>
                 )}
@@ -71,7 +76,9 @@ const postsWithExcerpts = await Promise.all(
     </ul>
 
     <p class="rss-subscribe text-gray-600">
-      subscribe <a href="/feed.xml" class="text-blue-600 hover:text-blue-800">via RSS</a>
+      subscribe <a href="/feed.xml" class="text-blue-600 hover:text-blue-800"
+        >via RSS</a
+      >
     </p>
   </div>
 </BaseLayout>
