@@ -42,6 +42,58 @@ test.describe("Site pages", () => {
     expect(contentType).toContain("xml");
   });
 
+  test("images load in get-more-value-from-your-test-asserts", async ({
+    page,
+  }) => {
+    await page.goto("/blog/get-more-value-from-your-test-asserts/");
+    const images = page.locator("article img");
+    const count = await images.count();
+    expect(count).toBe(3); // assert-sign, cher, we-need-to-go-deeper
+
+    for (let i = 0; i < count; i++) {
+      const img = images.nth(i);
+      await expect(img).toBeVisible();
+      const naturalWidth = await img.evaluate(
+        (el: HTMLImageElement) => el.naturalWidth,
+      );
+      expect(naturalWidth).toBeGreaterThan(0);
+    }
+  });
+
+  test("images load in https-binding-iis", async ({ page }) => {
+    await page.goto("/blog/https-binding-iis/");
+    const images = page.locator("article img");
+    const count = await images.count();
+    expect(count).toBe(2); // iis-step1, iis-step2
+
+    for (let i = 0; i < count; i++) {
+      const img = images.nth(i);
+      await expect(img).toBeVisible();
+      const naturalWidth = await img.evaluate(
+        (el: HTMLImageElement) => el.naturalWidth,
+      );
+      expect(naturalWidth).toBeGreaterThan(0);
+    }
+  });
+
+  test("images load in registry-hacks-isinstallationinprogress", async ({
+    page,
+  }) => {
+    await page.goto("/blog/registry-hacks-isinstallationinprogress/");
+    const images = page.locator("article img");
+    const count = await images.count();
+    expect(count).toBe(1); // vs2015-setup-error
+
+    for (let i = 0; i < count; i++) {
+      const img = images.nth(i);
+      await expect(img).toBeVisible();
+      const naturalWidth = await img.evaluate(
+        (el: HTMLImageElement) => el.naturalWidth,
+      );
+      expect(naturalWidth).toBeGreaterThan(0);
+    }
+  });
+
   test("navigation works", async ({ page }) => {
     await page.goto("/");
     // Click About link

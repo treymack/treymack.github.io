@@ -13,7 +13,7 @@ categories: iis certificates ssl
 
 # The GUI Way (inetmgr)
 
-![Select WebSite Node and Click Bindings ...](/images/2017-07-25-iis-step1.png)
+![Select WebSite Node and Click Bindings ...](/2017-07-25-iis-step1.png)
 
-![Click Add, Select HTTPS, Port 443, Select an SSL Certificate](/images/2017-07-25-iis-step2.png)
+![Click Add, Select HTTPS, Port 443, Select an SSL Certificate](/2017-07-25-iis-step2.png)
 

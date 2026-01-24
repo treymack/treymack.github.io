@@ -5,7 +5,7 @@ date:   2017-04-05
 categories: testing
 ---
 
-![Assert](/images/assert-sign-photoshopped.jpg)
+![Assert](/assert-sign-photoshopped.jpg)
 
 There's more than one way to skin an assertion. The thing to keep in mind is how the next developer (obligatory "or you in 6 months") is going to use the information if an assertion fails.
 
@@ -41,7 +41,7 @@ We rerun the test suite and see the following error message.
 
 That's about as good as we can do since we're discovering the error and don't know much about why it's important.
 
-![If I Could Turn Back Time](/images/cher-if-i-could-turn-back-time.jpg)
+![If I Could Turn Back Time](/cher-if-i-could-turn-back-time.jpg)
 
 If we could turn back time though...
 
@@ -62,7 +62,7 @@ Future self thanks past self. Maintenance time cut in half, at least.
 
 From what I've seen, this is about as good as you can do with the build-in assertion libraries in MSTest. NUnit has its [Constraint Model](https://github.com/nunit/docs/wiki/Constraint-Model) (Assert.That) that can allow for more expressive asserts.
 
-![We need to go deeper](/images/we-need-to-go-deeper.jpg)
+![We need to go deeper](/we-need-to-go-deeper.jpg)
 
 If you want to go deeper, check out [FluentAssertions](http://fluentassertions.com/) and [Shouldly](http://shouldly.readthedocs.io/en/latest/).
 

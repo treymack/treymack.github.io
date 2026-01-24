@@ -13,7 +13,7 @@ I was doing a repair on Visual Studio 2015 and it seemed to be stuck at the end,
 
 But I had work to do and was pretty confident that VS in its current state would take me through the day. I had to jump between a couple different projects that day and each time I would see:
 
-<img src="/images/vs2015-setup-error.png" alt="Repair/Modify Image" />
+<img src="/vs2015-setup-error.png" alt="Repair/Modify Image" />
 
 How do I disable this message box? Registry Hack Time! Here's the PowerShell script I used. (I like PowerShell)
 
