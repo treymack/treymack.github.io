@@ -13,7 +13,10 @@
       "Bash(gh pr create:*)",
       "WebSearch",
       "Bash(git checkout:*)",
-      "Bash(npm run test:unit:*)"
+      "Bash(npm run test:unit:*)",
+      "Bash(git fetch:*)",
+      "Bash(gh pr view:*)",
+      "Bash(gh pr list:*)"
     ],
     "deny": [],
     "ask": []
