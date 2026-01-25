@@ -70,10 +70,12 @@ draft: true                    # optional, default false
 
 Push to `master` triggers GitHub Actions workflow that builds and deploys to GitHub Pages. Workflow defined in `.github/workflows/deploy.yml`.
 
-## Pull Requests
+## Git Commits and Pull Requests
 
-When creating pull requests:
+When creating commits and pull requests:
 
-- Always create PRs to run CI checks before merging to master
+- Do NOT add "Co-Authored-By: Claude" trailers to commit messages
 - Do NOT include "🤖 Generated with Claude Code" footer in PR descriptions
-- Use clear, descriptive titles and structured PR descriptions with Summary and Test plan sections
+- Always create PRs to run CI checks before merging to master
+- Use clear, descriptive commit messages and PR titles
+- Structure PR descriptions with Summary and Test plan sections
