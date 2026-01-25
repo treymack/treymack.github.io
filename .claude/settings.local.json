@@ -16,7 +16,8 @@
       "Bash(npm run test:unit:*)",
       "Bash(git fetch:*)",
       "Bash(gh pr view:*)",
-      "Bash(gh pr list:*)"
+      "Bash(gh pr list:*)",
+      "Bash(npm run test:e2e:*)"
     ],
     "deny": [],
     "ask": []

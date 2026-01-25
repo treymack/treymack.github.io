@@ -1,38 +1,16 @@
 ---
 import { getCollection } from "astro:content";
-import { marked } from "marked";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import FormattedDate from "../components/FormattedDate.astro";
 import { SITE_TITLE } from "../consts";
 import { getPostUrl } from "../utils/slugs";
+import { processPostsExcerpts } from "../utils/excerpts";
 
 const posts = (await getCollection("blog")).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
 
-// Process posts with excerpts
-const postsWithExcerpts = await Promise.all(
-  posts.map(async (post) => {
-    const body = post.body || "";
-
-    let excerpt = "";
-    let excerptHtml = "";
-    let hasMore = false;
-
-    if (body.includes("<!--more-->")) {
-      excerpt = body.split("<!--more-->")[0];
-      excerptHtml = await marked.parse(excerpt);
-      hasMore = true;
-    }
-
-    return {
-      ...post,
-      excerpt,
-      excerptHtml,
-      hasMore,
-    };
-  }),
-);
+const postsWithExcerpts = await processPostsExcerpts(posts);
 ---
 
 <BaseLayout title={SITE_TITLE}>
