@@ -4,18 +4,11 @@ import { marked } from "marked";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import FormattedDate from "../components/FormattedDate.astro";
 import { SITE_TITLE } from "../consts";
+import { getPostUrl } from "../utils/slugs";
 
 const posts = (await getCollection("blog")).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
-
-// Helper to get post URL
-function getPostUrl(postId: string) {
-  const title = postId
-    .replace(/^\d{4}-\d{2}-\d{2}-/, "")
-    .replace(/\.mdx?$/, "");
-  return `/blog/${title}`;
-}
 
 // Process posts with excerpts
 const postsWithExcerpts = await Promise.all(
