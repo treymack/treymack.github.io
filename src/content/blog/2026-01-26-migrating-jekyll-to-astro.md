@@ -14,12 +14,11 @@ After a decade of running my personal blog on Jekyll, I decided it was time for 
 
 Jekyll had been a solid choice for years, but a few pain points had accumulated:
 
-1. **Ruby dependency hell** - Managing Ruby versions and gem dependencies across machines was tedious
-2. **Slow local development** - Even with incremental builds, the feedback loop felt sluggish
-3. **Limited component reuse** - No component-based architecture meant lots of copy-paste
-4. **TypeScript support** - I wanted type safety for content schemas and utilities
+- **Ruby is not in my toolset** - I didn't really know how to troubleshoot issues or keep dependencies up to date
+- **Limited component reuse** - No component-based architecture meant lots of copy-paste
+- **TypeScript support** - I wanted type safety for content schemas and utilities
 
-Astro offered solutions to all of these:
+Astro offered some compelling advantages:
 
 - **Node.js ecosystem** - Already using it daily, one less runtime to manage
 - **Fast HMR** - Sub-second hot module reloading during development
@@ -30,7 +29,7 @@ Astro offered solutions to all of these:
 
 ### Step 1: Content Migration
 
-Blog posts were straightforward - both Jekyll and Astro use Markdown frontmatter. The main changes:
+Blog posts were straightforward. Both Jekyll and Astro use Markdown frontmatter. The main changes:
 
 ```yaml
 # Jekyll frontmatter
@@ -50,6 +49,7 @@ categories: csharp
 ```
 
 Key changes:
+
 - Removed `layout` field (handled by page routes in Astro)
 - Standardized dates to `yyyy-MM-dd` format
 - Added Zod schema validation to enforce consistency
@@ -150,9 +150,10 @@ document.addEventListener("click", (e) => {
 
 ### Challenge 2: Testing Strategy
 
-Jekyll had no tests. For Astro, I wanted confidence in the migration:
+My Jekyll site had no tests. For Astro, I wanted confidence in the migration:
 
 **Unit tests** (Vitest) for pure functions:
+
 ```typescript
 // src/utils/slugs.test.ts
 describe("getSlugFromPostId", () => {
@@ -173,6 +174,7 @@ describe("getSlugFromPostId", () => {
 ```
 
 **E2E tests** (Playwright) for critical user flows:
+
 ```typescript
 test("mobile menu works after navigating to a post", async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 667 });
@@ -188,6 +190,7 @@ test("mobile menu works after navigating to a post", async ({ page }) => {
 ```
 
 Split test commands for clarity:
+
 ```json
 {
   "test": "npm run test:unit && npm run test:e2e",
@@ -212,7 +215,7 @@ If you're considering a similar migration:
 1. **Start with content** - Get your Markdown files working first, worry about polish later
 2. **Embrace type safety** - Zod schemas catch so many mistakes at build time
 3. **Test the tricky bits** - View transitions, mobile interactions - anything that doesn't work without JS
-4. **Document patterns** - Future you will thank you (I wrote a `src/layouts/README.md`)
+4. **Document patterns** - Your future self will thank you
 
 The modern static site ecosystem has come a long way. If you're still on Jekyll and feeling the friction, Astro is worth a look.
 
