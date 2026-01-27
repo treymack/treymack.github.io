@@ -1,6 +1,8 @@
 import { getCollection } from 'astro:content';
 import rss from '@astrojs/rss';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import { processPostsExcerpts } from '../utils/excerpts';
+import { getPostUrl } from '../utils/slugs';
 
 export async function GET(context) {
   const posts = await getCollection('blog');
@@ -10,17 +12,19 @@ export async function GET(context) {
     .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
     .slice(0, 10);
 
+  // Process posts to extract excerpts
+  const postsWithExcerpts = await processPostsExcerpts(sortedPosts);
+
   return rss({
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,
     site: context.site,
-    items: sortedPosts.map((post) => {
-      // Extract the title from the filename to match URL pattern
-      const urlTitle = post.id.replace(/^\d{4}-\d{2}-\d{2}-/, '').replace(/\.mdx?$/, '');
+    items: postsWithExcerpts.map((post) => {
       return {
         title: post.data.title,
         pubDate: post.data.date,
-        link: `/blog/${urlTitle}/`,
+        link: getPostUrl(post.id),
+        content: post.excerptHtml,
       };
     }),
   });
