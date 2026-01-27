@@ -1,13 +1,18 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import type { CollectionEntry } from "astro:content";
 
-// Mock dependencies
+// Mock module implementations
+const mockGetCollection = vi.fn();
+const mockRss = vi.fn((config) => config);
+const mockProcessPostsExcerpts = vi.fn();
+const mockGetPostUrl = vi.fn();
+
 vi.mock("astro:content", () => ({
-  getCollection: vi.fn(),
+  getCollection: mockGetCollection,
 }));
 
 vi.mock("@astrojs/rss", () => ({
-  default: vi.fn((config) => config),
+  default: mockRss,
 }));
 
 vi.mock("../consts", () => ({
@@ -16,29 +21,12 @@ vi.mock("../consts", () => ({
 }));
 
 vi.mock("../utils/excerpts", () => ({
-  processPostsExcerpts: vi.fn((posts) =>
-    Promise.resolve(
-      posts.map((post: CollectionEntry<"blog">) => ({
-        ...post,
-        excerpt: "Test excerpt",
-        excerptHtml: "<p>Test excerpt HTML</p>",
-        hasMore: true,
-      })),
-    ),
-  ),
+  processPostsExcerpts: mockProcessPostsExcerpts,
 }));
 
 vi.mock("../utils/slugs", () => ({
-  getPostUrl: vi.fn(
-    (postId: string) =>
-      `/blog/${postId.replace(/^\d{4}-\d{2}-\d{2}-/, "").replace(/\.mdx?$/, "")}`,
-  ),
+  getPostUrl: mockGetPostUrl,
 }));
-
-import { getCollection } from "astro:content";
-import rss from "@astrojs/rss";
-import { processPostsExcerpts } from "../utils/excerpts";
-import { getPostUrl } from "../utils/slugs";
 
 // Dynamic import of the actual module
 const getFeedModule = async () => {
@@ -63,6 +51,25 @@ const mockPost = (
 describe("feed.xml GET", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+
+    // Set up default mock implementations
+    mockProcessPostsExcerpts.mockImplementation((posts) =>
+      Promise.resolve(
+        posts.map((post: CollectionEntry<"blog">) => ({
+          ...post,
+          excerpt: "Test excerpt",
+          excerptHtml: "<p>Test excerpt HTML</p>",
+          hasMore: true,
+        })),
+      ),
+    );
+
+    mockGetPostUrl.mockImplementation(
+      (postId: string) =>
+        `/blog/${postId.replace(/^\d{4}-\d{2}-\d{2}-/, "").replace(/\.mdx?$/, "")}`,
+    );
+
+    mockRss.mockImplementation((config) => config);
   });
 
   it("sorts posts by date (most recent first)", async () => {
@@ -72,13 +79,13 @@ describe("feed.xml GET", () => {
       mockPost("2024-02-01-middle-post.md", "Middle Post", "2024-02-01"),
     ];
 
-    vi.mocked(getCollection).mockResolvedValue(posts);
+    mockGetCollection.mockResolvedValue(posts);
 
     const { GET } = await getFeedModule();
     const context = { site: "https://example.com" };
     await GET(context);
 
-    expect(processPostsExcerpts).toHaveBeenCalledWith(
+    expect(mockProcessPostsExcerpts).toHaveBeenCalledWith(
       expect.arrayContaining([
         expect.objectContaining({
           data: expect.objectContaining({ title: "Newest Post" }),
@@ -102,22 +109,20 @@ describe("feed.xml GET", () => {
       ),
     );
 
-    vi.mocked(getCollection).mockResolvedValue(posts);
+    mockGetCollection.mockResolvedValue(posts);
 
     const { GET } = await getFeedModule();
     const context = { site: "https://example.com" };
     await GET(context);
 
-    const sortedPosts = vi.mocked(processPostsExcerpts).mock.calls[0][0];
+    const sortedPosts = mockProcessPostsExcerpts.mock.calls[0][0];
     expect(sortedPosts).toHaveLength(10);
   });
 
   it("includes excerpt HTML in content field", async () => {
-    const posts = [
-      mockPost("2024-01-01-test-post.md", "Test Post", "2024-01-01"),
-    ];
+    const posts = [mockPost("2024-01-01-test-post.md", "Test Post", "2024-01-01")];
 
-    vi.mocked(getCollection).mockResolvedValue(posts);
+    mockGetCollection.mockResolvedValue(posts);
 
     const { GET } = await getFeedModule();
     const context = { site: "https://example.com" };
@@ -127,17 +132,15 @@ describe("feed.xml GET", () => {
   });
 
   it("uses getPostUrl utility for link generation", async () => {
-    const posts = [
-      mockPost("2024-01-01-test-post.md", "Test Post", "2024-01-01"),
-    ];
+    const posts = [mockPost("2024-01-01-test-post.md", "Test Post", "2024-01-01")];
 
-    vi.mocked(getCollection).mockResolvedValue(posts);
+    mockGetCollection.mockResolvedValue(posts);
 
     const { GET } = await getFeedModule();
     const context = { site: "https://example.com" };
     await GET(context);
 
-    expect(getPostUrl).toHaveBeenCalledWith("2024-01-01-test-post.md");
+    expect(mockGetPostUrl).toHaveBeenCalledWith("2024-01-01-test-post.md");
   });
 
   it("generates RSS feed with correct structure", async () => {
@@ -146,13 +149,13 @@ describe("feed.xml GET", () => {
       mockPost("2024-01-10-second-post.md", "Second Post", "2024-01-10"),
     ];
 
-    vi.mocked(getCollection).mockResolvedValue(posts);
+    mockGetCollection.mockResolvedValue(posts);
 
     const { GET } = await getFeedModule();
     const context = { site: "https://example.com" };
     const result = await GET(context);
 
-    expect(rss).toHaveBeenCalledWith({
+    expect(mockRss).toHaveBeenCalledWith({
       title: "Test Site",
       description: "Test Description",
       site: "https://example.com",
@@ -174,7 +177,7 @@ describe("feed.xml GET", () => {
   });
 
   it("handles empty posts collection", async () => {
-    vi.mocked(getCollection).mockResolvedValue([]);
+    mockGetCollection.mockResolvedValue([]);
 
     const { GET } = await getFeedModule();
     const context = { site: "https://example.com" };
@@ -190,14 +193,14 @@ describe("feed.xml GET", () => {
       mockPost("2024-01-03-post3.md", "Post 3", "2024-01-03"),
     ];
 
-    vi.mocked(getCollection).mockResolvedValue(posts);
+    mockGetCollection.mockResolvedValue(posts);
 
     const { GET } = await getFeedModule();
     const context = { site: "https://example.com" };
     await GET(context);
 
-    expect(processPostsExcerpts).toHaveBeenCalledTimes(1);
-    expect(processPostsExcerpts).toHaveBeenCalledWith(
+    expect(mockProcessPostsExcerpts).toHaveBeenCalledTimes(1);
+    expect(mockProcessPostsExcerpts).toHaveBeenCalledWith(
       expect.arrayContaining([
         expect.objectContaining({ id: "2024-01-03-post3.md" }),
         expect.objectContaining({ id: "2024-01-02-post2.md" }),
@@ -208,11 +211,9 @@ describe("feed.xml GET", () => {
 
   it("sets pubDate from post data date", async () => {
     const testDate = new Date("2024-06-15T00:00:00Z");
-    const posts = [
-      mockPost("2024-06-15-dated-post.md", "Dated Post", "2024-06-15"),
-    ];
+    const posts = [mockPost("2024-06-15-dated-post.md", "Dated Post", "2024-06-15")];
 
-    vi.mocked(getCollection).mockResolvedValue(posts);
+    mockGetCollection.mockResolvedValue(posts);
 
     const { GET } = await getFeedModule();
     const context = { site: "https://example.com" };
