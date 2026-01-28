@@ -83,9 +83,9 @@ import {
 
       // Cloudflare's decoding algorithm
       let decoded = "";
-      const key = parseInt(enc.substr(0, 2), 16);
+      const key = parseInt(enc.substring(0, 2), 16);
       for (let i = 2; i < enc.length; i += 2) {
-        decoded += String.fromCharCode(parseInt(enc.substr(i, 2), 16) ^ key);
+        decoded += String.fromCharCode(parseInt(enc.substring(i, i + 2), 16) ^ key);
       }
 
       // Update the element content and href if it's a link

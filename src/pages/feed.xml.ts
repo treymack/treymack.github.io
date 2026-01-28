@@ -17,6 +17,10 @@ export async function GET(context: APIContext) {
   // Transform posts to RSS items
   const items = postsToRSSItems(postsWithExcerpts);
 
+  if (!context.site) {
+    throw new Error("Site URL is required for RSS feed generation");
+  }
+
   return rss({
     title: SITE_TITLE,
     description: SITE_DESCRIPTION,

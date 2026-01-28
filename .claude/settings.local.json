@@ -23,5 +23,19 @@
     ],
     "deny": [],
     "ask": []
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash(git commit*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npm run build && npm test",
+            "statusMessage": "Running build and tests before commit..."
+          }
+        ]
+      }
+    ]
   }
 }
