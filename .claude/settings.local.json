@@ -17,9 +17,25 @@
       "Bash(git fetch:*)",
       "Bash(gh pr view:*)",
       "Bash(gh pr list:*)",
-      "Bash(npm run test:e2e:*)"
+      "Bash(npm run test:e2e:*)",
+      "Bash(ls:*)",
+      "Bash(git mv:*)"
     ],
     "deny": [],
     "ask": []
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash(git commit*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npm run build && npm test",
+            "statusMessage": "Running build and tests before commit..."
+          }
+        ]
+      }
+    ]
   }
 }
