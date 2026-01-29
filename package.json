@@ -11,6 +11,9 @@
     "test:unit": "vitest run",
     "test:e2e": "playwright test"
   },
+  "overrides": {
+    "lodash": ">=4.17.23"
+  },
   "dependencies": {
     "@astrojs/check": "^0.9.6",
     "@astrojs/mdx": "^4.3.13",
