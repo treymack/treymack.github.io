@@ -19,7 +19,10 @@
       "Bash(gh pr list:*)",
       "Bash(npm run test:e2e:*)",
       "Bash(ls:*)",
-      "Bash(git mv:*)"
+      "Bash(git mv:*)",
+      "Bash(git ls-tree:*)",
+      "Bash(git rev-parse:*)",
+      "Bash(git pull:*)"
     ],
     "deny": [],
     "ask": []
