@@ -58,13 +58,23 @@ npx prettier --write <file>
 title: "Post Title"
 date: 2025-01-21
 description: optional SEO description
-updatedDate: 2025-01-22        # optional
-heroImage: ./hero.jpg          # optional, relative path
+updatedDate: 2025-01-22 # optional
+heroImage: ./hero.jpg # optional, relative path
 categories: optional-category
-tags: ["tag1", "tag2"]         # optional
-draft: true                    # optional, default false
+tags: ["tag1", "tag2"] # optional
+draft: true # optional, default false
 ---
 ```
+
+**Blog Post Content Structure**:
+
+- Use only ONE h1 heading (`#`) - the post title is rendered as h1 automatically
+- All section headings in the content should be h2 (`##`) or nested subheadings (h3 `###`, h4 `####`, etc.)
+- Never use multiple h1 headings in a blog post
+
+**Writing Style**:
+
+- Use two periods (..) for ellipses, not three (...)
 
 ## Deployment
 
