@@ -6,7 +6,7 @@ categories: angular
 tags: ["angular", "mcp", "gemini", "copilot", "ai"]
 ---
 
-I tried working through Angular's AI Tutorial using their MCP (Model Context Protocol) server. First with GitHub Copilot, then with Google Gemini. The experience was.. different.
+I tried working through [Angular's AI Tutorial](https://angular.dev/ai/ai-tutor) using their MCP (Model Context Protocol) server. First with GitHub Copilot, then with Google Gemini. The experience was.. different.
 
 <!--more-->
 
