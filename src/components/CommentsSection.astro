@@ -10,22 +10,49 @@ import {
 <div class="comments-section mt-12 pt-8 border-t border-gray-200">
   <h2 class="text-2xl font-bold mb-6">Comments</h2>
 
+  <div class="giscus"></div>
+
   <script
     is:inline
-    src="https://giscus.app/client.js"
-    data-repo={GISCUS_REPO}
-    data-repo-id={GISCUS_REPO_ID}
-    data-category={GISCUS_CATEGORY}
-    data-category-id={GISCUS_CATEGORY_ID}
-    data-mapping="pathname"
-    data-strict="0"
-    data-reactions-enabled="1"
-    data-emit-metadata="0"
-    data-input-position="top"
-    data-theme="light"
-    data-lang="en"
-    data-loading="lazy"
-    crossorigin="anonymous"
-    async
-  ></script>
+    define:vars={{
+      GISCUS_REPO,
+      GISCUS_REPO_ID,
+      GISCUS_CATEGORY,
+      GISCUS_CATEGORY_ID,
+    }}
+  >
+    function loadGiscus() {
+      const giscusContainer = document.querySelector(".giscus");
+      if (!giscusContainer) return;
+
+      // Clear existing Giscus if present
+      giscusContainer.innerHTML = "";
+
+      // Create and append the Giscus script
+      const script = document.createElement("script");
+      script.src = "https://giscus.app/client.js";
+      script.setAttribute("data-repo", GISCUS_REPO);
+      script.setAttribute("data-repo-id", GISCUS_REPO_ID);
+      script.setAttribute("data-category", GISCUS_CATEGORY);
+      script.setAttribute("data-category-id", GISCUS_CATEGORY_ID);
+      script.setAttribute("data-mapping", "pathname");
+      script.setAttribute("data-strict", "0");
+      script.setAttribute("data-reactions-enabled", "1");
+      script.setAttribute("data-emit-metadata", "0");
+      script.setAttribute("data-input-position", "top");
+      script.setAttribute("data-theme", "light");
+      script.setAttribute("data-lang", "en");
+      script.setAttribute("data-loading", "lazy");
+      script.setAttribute("crossorigin", "anonymous");
+      script.async = true;
+
+      giscusContainer.appendChild(script);
+    }
+
+    // Load on initial page load
+    loadGiscus();
+
+    // Reload after view transitions
+    document.addEventListener("astro:page-load", loadGiscus);
+  </script>
 </div>
