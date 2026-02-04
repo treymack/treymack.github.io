@@ -30,4 +30,11 @@ const blog = defineCollection({
     }),
 });
 
-export const collections = { blog };
+const about = defineCollection({
+  // Load Markdown files in the `src/content/about/` directory.
+  loader: glob({ base: "./src/content/about", pattern: "**/*.md" }),
+  // No schema required - just load the markdown content
+  schema: z.object({}),
+});
+
+export const collections = { blog, about };
