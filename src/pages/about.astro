@@ -1,6 +1,20 @@
 ---
-import PageLayout from '../layouts/PageLayout.astro';
-import { SITE_DESCRIPTION } from '../consts';
+import { getCollection } from "astro:content";
+import { render } from "astro:content";
+import PageLayout from "../layouts/PageLayout.astro";
+import { SITE_DESCRIPTION } from "../consts";
+
+// Get all about entries and render them
+const aboutEntries = await getCollection("about");
+const renderedEntries = await Promise.all(
+  aboutEntries.map(async (entry) => {
+    const { Content } = await render(entry);
+    return {
+      id: entry.id,
+      Content,
+    };
+  }),
+);
 ---
 
 <PageLayout title="About">
@@ -8,9 +22,36 @@ import { SITE_DESCRIPTION } from '../consts';
 
   <p class="mb-4">{SITE_DESCRIPTION}</p>
 
-  <p class="mb-4">Oxford comma fan.</p>
+  <!-- Random about content will be injected here -->
+  <div id="random-about" class="prose prose-lg max-w-none">
+    {
+      renderedEntries.map(({ id, Content }) => (
+        <div data-about-entry={id} style="display: none;">
+          <Content />
+        </div>
+      ))
+    }
+  </div>
 
-  <p class="mb-4">Strong opinions, weakly held.</p>
+  <script is:inline>
+    // Pick a random about entry and display it
+    function showRandomAbout() {
+      const entries = document.querySelectorAll("[data-about-entry]");
 
-  <p>Neil deGrasse Tyson.</p>
+      // Hide all entries first
+      entries.forEach((entry) => (entry.style.display = "none"));
+
+      // Show one random entry
+      if (entries.length > 0) {
+        const randomIndex = Math.floor(Math.random() * entries.length);
+        entries[randomIndex].style.display = "block";
+      }
+    }
+
+    // Run on initial load
+    showRandomAbout();
+
+    // Run again after view transitions
+    document.addEventListener("astro:page-load", showRandomAbout);
+  </script>
 </PageLayout>
