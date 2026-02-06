@@ -7,6 +7,7 @@ export const SITE_DESCRIPTION =
 export const SITE_EMAIL = "tmack10@gmail.com";
 export const TWITTER_USERNAME = "trey_mack";
 export const GITHUB_USERNAME = "treymack";
+export const LINKEDIN_USERNAME = "treymack";
 export const GA_ID = "UA-96898181-1";
 
 export const GISCUS_SCRIPT = `
