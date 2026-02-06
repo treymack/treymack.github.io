@@ -17,7 +17,7 @@ test.describe("Site pages", () => {
   test("blog post page loads with title and date", async ({ page }) => {
     await page.goto("/blog/hello-2015/");
     await expect(page).toHaveTitle(/Hello, World!/);
-    await expect(page.locator("h1")).toContainText("Hello, World!");
+    await expect(page.locator(".post-title")).toContainText("Hello, World!");
     // Check date is displayed
     await expect(page.locator(".post-meta")).toBeVisible();
   });

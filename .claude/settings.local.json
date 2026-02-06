@@ -23,7 +23,9 @@
       "Bash(git ls-tree:*)",
       "Bash(git rev-parse:*)",
       "Bash(git pull:*)",
-      "Bash(gh run:*)"
+      "Bash(gh run:*)",
+      "Bash(npm test:*)",
+      "Bash(npx playwright test:*)"
     ],
     "deny": [],
     "ask": []
