@@ -39,8 +39,8 @@ This is a good thing. Better to fail loudly than silently test the wrong element
 
 The error message helpfully lists all 5 elements it found:
 
-1. My blog post title (the one I wanted)
-   2-5. Some h1s from Astro's dev overlay and debugging tools
+- Number 1. My blog post title (the one I wanted)
+- Numbers 2-5. Some h1s from Astro's dev overlay and debugging tools
 
 ## Debugging Techniques
 
