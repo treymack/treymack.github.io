@@ -76,23 +76,51 @@ import {
 <div class="comments-section mt-12 pt-8 border-t border-gray-200">
   <h2 class="text-2xl font-bold mb-6">Comments</h2>
 
+  <div class="giscus"></div>
+
   <script
     is:inline
-    src="https://giscus.app/client.js"
-    data-repo={GISCUS_REPO}
-    data-repo-id={GISCUS_REPO_ID}
-    data-category={GISCUS_CATEGORY}
-    data-category-id={GISCUS_CATEGORY_ID}
-    data-mapping="pathname"
-    data-strict="0"
-    data-reactions-enabled="1"
-    data-emit-metadata="0"
-    data-input-position="top"
-    data-theme="light"
-    data-lang="en"
-    data-loading="lazy"
-    crossorigin="anonymous"
-    async></script>
+    define:vars={{
+      GISCUS_REPO,
+      GISCUS_REPO_ID,
+      GISCUS_CATEGORY,
+      GISCUS_CATEGORY_ID,
+    }}
+  >
+    function loadGiscus() {
+      const giscusContainer = document.querySelector(".giscus");
+      if (!giscusContainer) return;
+
+      // Clear existing Giscus if present
+      giscusContainer.innerHTML = "";
+
+      // Create and append the Giscus script
+      const script = document.createElement("script");
+      script.src = "https://giscus.app/client.js";
+      script.setAttribute("data-repo", GISCUS_REPO);
+      script.setAttribute("data-repo-id", GISCUS_REPO_ID);
+      script.setAttribute("data-category", GISCUS_CATEGORY);
+      script.setAttribute("data-category-id", GISCUS_CATEGORY_ID);
+      script.setAttribute("data-mapping", "pathname");
+      script.setAttribute("data-strict", "0");
+      script.setAttribute("data-reactions-enabled", "1");
+      script.setAttribute("data-emit-metadata", "0");
+      script.setAttribute("data-input-position", "top");
+      script.setAttribute("data-theme", "light");
+      script.setAttribute("data-lang", "en");
+      script.setAttribute("data-loading", "lazy");
+      script.setAttribute("crossorigin", "anonymous");
+      script.async = true;
+
+      giscusContainer.appendChild(script);
+    }
+
+    // Load on initial page load
+    loadGiscus();
+
+    // Reload after view transitions
+    document.addEventListener("astro:page-load", loadGiscus);
+  </script>
 </div>
 ```
 
@@ -100,7 +128,8 @@ A couple of key configuration choices:
 
 - `data-mapping="pathname"` - Each blog post URL gets its own discussion
 - `data-loading="lazy"` - Loads when scrolled into view for better performance
-- `is:inline` - Ensures the script runs properly with Astro's view transitions
+- `define:vars` - Passes configuration constants to the inline script
+- Dynamic script creation - Ensures Giscus reloads properly when navigating between posts
 
 Then I just dropped the component into my blog post layout:
 
@@ -128,9 +157,19 @@ For moderation, I enabled GitHub notifications for Discussions. Now I get an ema
 
 GitHub also has built-in spam detection that flags suspicious accounts and known spam patterns, which helps catch the obvious stuff automatically.
 
-## The Gotcha
+## The Gotchas
 
-One thing to watch out for - make sure your category name matches your category ID. I initially had a mismatch where the configuration was pointing to "Comments" but the ID was for "Announcements". Comments posted fine to GitHub Discussions, but they weren't showing up in the widget because it was looking in the wrong category.
+### Category Mismatch
+
+Make sure your category name matches your category ID. I initially had a mismatch where the configuration was pointing to "Comments" but the ID was for "Announcements". Comments posted fine to GitHub Discussions, but they weren't showing up in the widget because it was looking in the wrong category.
+
+### View Transitions
+
+If you're using Astro's view transitions (enabled via `<ViewTransitions />` in your layout), you'll run into an issue where comments don't reload when navigating between posts. The Giscus script loads on the first page but doesn't reinitialize for new pathnames.
+
+The fix is to dynamically load the Giscus script and listen for Astro's `astro:page-load` event. When the event fires, clear the container and reload the script. This ensures comments always load correctly, whether you navigate directly to a post or click between posts using links.
+
+This is the trade-off with view transitions - they give you smooth SPA-like navigation, but third-party scripts need special handling. Worth thinking about whether the smoother navigation is worth the extra complexity for your use case.
 
 ## Are the IDs Secret?
 

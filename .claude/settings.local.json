@@ -26,6 +26,7 @@
       "Bash(gh run:*)",
       "Bash(npm test:*)",
       "Bash(npx playwright test:*)"
+      "Bash(git cherry-pick:*)"
     ],
     "deny": [],
     "ask": []
