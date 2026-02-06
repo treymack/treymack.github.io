@@ -28,3 +28,4 @@ pnpm-debug.log*
 
 # bundler cache
 vendor/bundle
+.claude/.settings.local.j.swp
