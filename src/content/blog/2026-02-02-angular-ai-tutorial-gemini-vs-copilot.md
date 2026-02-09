@@ -1,7 +1,7 @@
 ---
 title: "Angular's AI Tutorial: Gemini vs GitHub Copilot Through MCP"
 date: 2026-02-02
-description: "Comparing GitHub Copilot and Google Gemini when following Angular's AI Tutorial through their MCP server - one stayed on track, the other ran out of tokens."
+description: "Comparing GitHub Copilot and Google Gemini when following Angular's AI Tutorial through their MCP server - one stayed on track, the other ran out of chat messages."
 categories: angular
 tags: ["angular", "mcp", "gemini", "copilot", "ai"]
 ---
@@ -14,15 +14,15 @@ Angular's MCP server is supposed to provide structured guidance for learning Ang
 
 At least, that's the idea.
 
-## Copilot ran out of tokens
+## Copilot ran out of chat messages
 
-I started with GitHub Copilot. Things were going fine until suddenly they weren't. **Copilot ran out of tokens mid-tutorial**. Not just for the session - for the entire month. I was in the middle of implementing a feature and just.. stopped. Now I wait for the monthly reset.
+I started with GitHub Copilot. Things were going fine until suddenly they weren't. **Copilot ran out of chat messages mid-tutorial**. Not just for the session - for the entire month. I was in the middle of implementing a feature and just.. stopped. Now I wait for the monthly reset.
 
 Not sure what the free tier token limits are for Copilot vs Gemini, but the difference was obvious. Copilot hit the ceiling. Gemini never came close.
 
 ## Copilot made up its own curriculum
 
-More annoying than the token limit was Copilot **veering off the tutorial's guidelines**. It started making up its own curriculum. Not minor tweaks - completely different approaches than what the tutorial intended.
+More annoying than the chat messages limit was Copilot **veering off the tutorial's guidelines**. It started making up its own curriculum. Not minor tweaks - completely different approaches than what the tutorial intended.
 
 When you're trying to learn a framework's recommended patterns, having the AI invent its own is pretty counterproductive. I wanted Angular's conventions, not Copilot's interpretation of them.
 
