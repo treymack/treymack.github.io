@@ -2,7 +2,7 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import FormattedDate from "../components/FormattedDate.astro";
-import { SITE_TITLE } from "../consts";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
 import { getPostUrl } from "../utils/slugs";
 import { processPostsExcerpts } from "../utils/excerpts";
 
@@ -13,7 +13,7 @@ const posts = (await getCollection("blog")).sort(
 const postsWithExcerpts = await processPostsExcerpts(posts);
 ---
 
-<BaseLayout title={SITE_TITLE}>
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
   <div class="home">
     <h1 class="page-heading text-2xl font-bold mb-6">Posts</h1>
 
