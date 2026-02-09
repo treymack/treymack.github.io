@@ -3,7 +3,7 @@
 
 export const SITE_TITLE = "Trey Mack";
 export const SITE_DESCRIPTION =
-  "I am a full stack web developer specializing in reactive web applications and integration. Feel free to contact me on Twitter or via email.";
+  "I'm a full-stack engineer and tech lead with 20+ years of experience modernizing legacy systems and building distributed architectures. I specialize in .NET, Angular, and Kubernetes, with a focus on reliability and maintainable systems.";
 export const SITE_EMAIL = "tmack10@gmail.com";
 export const TWITTER_USERNAME = "trey_mack";
 export const GITHUB_USERNAME = "treymack";
