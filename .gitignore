@@ -28,4 +28,9 @@ pnpm-debug.log*
 
 # bundler cache
 vendor/bundle
-.claude/.settings.local.j.swp
+
+# editor temporary files
+*.swp
+*.swo
+*.swn
+*~
