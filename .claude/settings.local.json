@@ -26,7 +26,10 @@
       "Bash(gh run:*)",
       "Bash(npm test:*)",
       "Bash(npx playwright test:*)",
-      "Bash(git cherry-pick:*)"
+      "Bash(git cherry-pick:*)",
+      "WebFetch(domain:www.linkedin.com)",
+      "Bash(gh repo view:*)",
+      "Bash(gh api:*)"
     ],
     "deny": [],
     "ask": []

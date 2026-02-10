@@ -1,6 +1,6 @@
 ---
 title: "Composable Scripts and the PowerShell Pipeline"
-date: 2026-02-06
+date: 2026-02-10
 description: "A look back at a 2016 PowerShell tool for FluentMigrator that turned out to be a great example of composable scripts and pipelines. What worked, what didn't, and why the pattern still holds up today."
 tags: ["powershell", "database", "devops", "fluentmigrator"]
 ---
@@ -22,7 +22,7 @@ The project had a handful of scripts, each doing exactly one thing:
 - `Restore-NuGetPackage.ps1` - restore dependencies
 - `New-Migration.ps1` - scaffold a new migration file
 
-Nothing special on their own. The interesting part was the README usage:
+Nothing special on their own. The interesting part was the usage:
 
 ```powershell
 # Full setup from scratch
@@ -49,28 +49,6 @@ That last one runs migrations up, then down, then up again. If your rollback is 
 PowerShell pipelines pass **objects**, not text. Unlike Unix pipes where you're parsing stdout strings, each script in this chain received a structured object from the previous one - the project name, paths, connection strings. No parsing, no fragile string splits.
 
 Each script was designed with a single responsibility and a predictable input/output contract. That's what made them composable. You could drop any script out of the chain, swap the order where it made sense, or add new scripts without touching existing ones.
-
-## The Idea That Has Held Up
-
-Looking at this now, the pattern maps almost directly to how we think about CI/CD pipelines today:
-
-- GitHub Actions steps pass outputs to downstream steps
-- Docker multi-stage builds chain image layers
-- Unix `make` chains targets with dependencies
-
-The names changed but the idea didn't: **small units with clear contracts, composed into workflows**.
-
-The main difference is that modern tools make the pipeline a first-class concept with better error handling, parallelism, and observability. In 2016 this was a handful of `.ps1` files and a README.
-
-## What I'd Do Differently
-
-A few things that haven't aged as well:
-
-**Hardcoded project structure.** The README says upfront "change `Get-MigrationProject.ps1` as needed." That's a code smell dressed up as documentation. A config file or parameters would have been cleaner.
-
-**No error handling between steps.** If `Invoke-MsBuild` failed, the pipeline kept going and blew up in a confusing place downstream. Each script should have validated its input and failed fast with a clear message.
-
-**Local-only.** These scripts only targeted local SQL Server. Extending them to dev/staging environments would have required significant rework. Parameterizing the environment from the start would have made that easier.
 
 ## Worth Revisiting?
 
