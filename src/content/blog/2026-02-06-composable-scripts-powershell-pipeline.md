@@ -50,6 +50,53 @@ PowerShell pipelines pass **objects**, not text. Unlike Unix pipes where you're 
 
 Each script was designed with a single responsibility and a predictable input/output contract. That's what made them composable. You could drop any script out of the chain, swap the order where it made sense, or add new scripts without touching existing ones.
 
+## How Object Passing Works
+
+The mechanics are straightforward. A script outputs an object, and the next script declares a parameter that accepts pipeline input.
+
+**Outputting an object:**
+
+```powershell
+# Get-MigrationProject.ps1
+param([string]$ProjectName)
+
+[PSCustomObject]@{
+    ProjectName    = $ProjectName
+    AssemblyPath   = ".\bin\Release\Migrations.dll"
+    ConnectionString = "Server=.;Database=$ProjectName;Trusted_Connection=True"
+}
+```
+
+**Receiving it in the next script:**
+
+```powershell
+# Invoke-MsBuild.ps1
+param(
+    [Parameter(ValueFromPipeline)]
+    [PSCustomObject]$Config
+)
+
+process {
+    # build using $Config.AssemblyPath, etc.
+    msbuild $Config.AssemblyPath /p:Configuration=Release
+
+    $Config  # pass the same object along
+}
+```
+
+The `process` block runs once per object in the pipeline. Passing `$Config` through at the end lets the next script in the chain pick it up unchanged.
+
+If you want to add fields as you go:
+
+```powershell
+process {
+    # do work, then emit an enriched object
+    $Config | Add-Member -NotePropertyName BuildOutput -NotePropertyValue $output -PassThru
+}
+```
+
+That's the whole pattern. Each script reads what it needs, does its work, and emits either the same object or an enriched version for downstream scripts.
+
 ## Worth Revisiting?
 
 If you're still on FluentMigrator and doing manual migration runs, this pattern is worth considering. The scripts are short enough to read in a few minutes and easy to adapt.
