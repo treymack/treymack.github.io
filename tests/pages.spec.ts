@@ -29,10 +29,11 @@ test.describe("Site pages", () => {
     await expect(blockquote).toContainText("inside that counts");
   });
 
-  test("blockquotes render in excerpts on home page", async ({ page }) => {
+  test("post descriptions render on home page", async ({ page }) => {
     await page.goto("/");
-    const blockquote = page.locator(".post-excerpt blockquote").first();
-    await expect(blockquote).toBeVisible();
+    const excerpt = page.locator(".post-excerpt").first();
+    await expect(excerpt).toBeVisible();
+    await expect(excerpt).not.toBeEmpty();
   });
 
   test("RSS feed is valid XML", async ({ request }) => {
