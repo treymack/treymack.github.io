@@ -51,6 +51,7 @@ describe("processPostExcerpt", () => {
     expect(result.excerptHtml).toContain("<em>italic</em>");
   });
 
+
   it("preserves original post properties", async () => {
     const post = mockPost("Excerpt<!--more-->More");
     const result = await processPostExcerpt(post);

@@ -29,7 +29,9 @@
       "Bash(git cherry-pick:*)",
       "WebFetch(domain:www.linkedin.com)",
       "Bash(gh repo view:*)",
-      "Bash(gh api:*)"
+      "Bash(gh api:*)",
+      "WebFetch(domain:docs.astro.build)",
+      "Bash(npx vitest:*)"
     ],
     "deny": [],
     "ask": []

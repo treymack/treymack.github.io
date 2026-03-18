@@ -37,8 +37,9 @@ npx prettier --write <file>
 
 **Content System**:
 
-- Blog posts are Markdown/MDX files in `/src/content/blog/`
-- Filename format: `YYYY-MM-DD-slug.md` (date prefix removed for URL slug)
+- Blog posts live in dated folders under `/src/content/blog/`
+- Folder format: `YYYY-MM-DD-slug/index.md` — the date prefix is removed for the URL slug
+- Images co-located in the same folder, referenced with relative paths (e.g. `./image.png`)
 - Use `<!--more-->` tag to define excerpt break point
 - Content validated via Zod schema in `src/content.config.ts`
 

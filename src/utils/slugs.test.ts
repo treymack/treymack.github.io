@@ -28,6 +28,16 @@ describe("getSlugFromPostId", () => {
       expected: "benefits-eight-based-system",
       description: "handles posts with numbers in slug",
     },
+    {
+      input: "2017-06-30-get-adobject-pscx-memberof/index.md",
+      expected: "get-adobject-pscx-memberof",
+      description: "handles folder-per-post layout with index.md",
+    },
+    {
+      input: "2024-01-15-my-mdx-post/index.mdx",
+      expected: "my-mdx-post",
+      description: "handles folder-per-post layout with index.mdx",
+    },
   ];
 
   testCases.forEach(({ input, expected, description }) => {
@@ -53,6 +63,10 @@ describe("getPostUrl", () => {
     },
     {
       input: "2017-07-25-https-binding-iis.md",
+      expected: "/blog/https-binding-iis",
+    },
+    {
+      input: "2017-07-25-https-binding-iis/index.md",
       expected: "/blog/https-binding-iis",
     },
   ];
