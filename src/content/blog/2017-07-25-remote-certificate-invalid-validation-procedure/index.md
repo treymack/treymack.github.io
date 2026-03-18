@@ -2,6 +2,7 @@
 layout: post
 title:  "The remote certificate is invalid according to the validation procedure."
 date:   2017-07-25
+description: "The client doesn't trust the certificate on the server. Every time I've seen this error it's come from a self-signed certificate that the server is configured to use."
 categories: iis certificates ssl
 ---
 
@@ -9,7 +10,7 @@ categories: iis certificates ssl
 
 The client doesn't trust the certificate on the server. Every time I've seen this error message it's come from a self-signed certificate that the server is configured to use.
 
-<!--more-->
+
 
 # A Workaround To Avoid
 

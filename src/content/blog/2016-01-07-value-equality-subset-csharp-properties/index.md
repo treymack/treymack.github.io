@@ -2,8 +2,11 @@
 layout: post
 title:  "Value Equality from a Subset of Properties in C#"
 date: 2016-01-07
+description: "The default comparison for equality in .Net uses reference equality. Here's how to implement value equality by comparing a subset of properties on two class instances."
 categories: csharp
 ---
+
+Edit 2026-03-18: Just use C# 9's record types and be done with it. If you need to compare only a subset of properties, you can use the `with` expression to create a new record with only the properties you care about, and then compare those.
 
 > It's what's inside that counts.
 
@@ -11,7 +14,6 @@ The default comparison for equality in .Net, when comparing reference types, use
 
 In most of my day-to-day, however, I'd prefer to use value equality. That's comparing the values of the properties of 2 instances of a class to determine equality.
 
-<!--more-->
 
 Actually, I'd like to go one step further. I don't want to compare all the properties of the class instances, just the ones that I determine indicate identity. So I whipped up a little interface `IStructurallyIdentifiable<T>` to help us out towards this goal. Implementers of this interface determine which properties determine identity for the class.
 

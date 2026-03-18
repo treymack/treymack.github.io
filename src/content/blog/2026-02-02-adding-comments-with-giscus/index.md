@@ -8,7 +8,6 @@ tags: ["astro", "giscus", "github", "comments"]
 
 After years of running a blog without comments, I finally decided it was time to add them. But not just any comment system - I had specific requirements in mind.
 
-<!--more-->
 
 ## What I Wanted
 

@@ -2,6 +2,7 @@
 layout: post
 title:  "Using Get-ADObject from PSCX to list members of an AD Group"
 date:   2017-06-30
+description: "Sometimes you need to list the members of an AD group but don't have the AD tools available. Using Get-ADObject from PowerShell Community Extensions (PSCX) instead."
 categories: powershell activedirectory
 ---
 
@@ -9,7 +10,7 @@ Sometimes you need to list the members of an AD group, and either you don't have
 
 We have PowerShell though, and the Community Extensions for PowerShell (PSCX), and they've wrapped AD access in a CmdLet named Get-ADObject.
 
-<!--more-->
+
 
 So here's how we can get the information of the group we're interested in.
 
