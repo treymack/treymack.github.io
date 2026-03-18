@@ -8,7 +8,6 @@ tags: ["astro", "jekyll", "migration", "static-site-generators"]
 
 After a decade of running my personal blog on Jekyll, I decided it was time for a change. The blog had served me well, but I wanted something more modern with better developer experience. Enter Astro 5.
 
-<!--more-->
 
 ## Why Migrate?
 

@@ -1,12 +1,12 @@
 import { describe, it, expect } from "vitest";
 import type { CollectionEntry } from "astro:content";
 import { sortAndLimitPosts, postsToRSSItems } from "./feed";
-import type { PostWithExcerpt } from "./excerpts";
 
 const mockPost = (
   id: string,
   title: string,
   date: string,
+  description?: string,
 ): CollectionEntry<"blog"> =>
   ({
     id,
@@ -15,21 +15,9 @@ const mockPost = (
     data: {
       title,
       date: new Date(date),
+      description,
     },
   }) as CollectionEntry<"blog">;
-
-const mockPostWithExcerpt = (
-  id: string,
-  title: string,
-  date: string,
-  excerptHtml: string = "<p>Test excerpt</p>",
-): PostWithExcerpt =>
-  ({
-    ...mockPost(id, title, date),
-    excerpt: "Test excerpt",
-    excerptHtml,
-    hasMore: true,
-  }) as PostWithExcerpt;
 
 describe("sortAndLimitPosts", () => {
   it("sorts posts by date (most recent first)", () => {
@@ -107,18 +95,8 @@ describe("sortAndLimitPosts", () => {
 describe("postsToRSSItems", () => {
   it("transforms posts to RSS items with correct fields", () => {
     const posts = [
-      mockPostWithExcerpt(
-        "2024-01-15-first-post.md",
-        "First Post",
-        "2024-01-15",
-        "<p>First excerpt</p>",
-      ),
-      mockPostWithExcerpt(
-        "2024-01-10-second-post.md",
-        "Second Post",
-        "2024-01-10",
-        "<p>Second excerpt</p>",
-      ),
+      mockPost("2024-01-15-first-post.md", "First Post", "2024-01-15", "First description"),
+      mockPost("2024-01-10-second-post.md", "Second Post", "2024-01-10", "Second description"),
     ];
 
     const result = postsToRSSItems(posts);
@@ -128,43 +106,30 @@ describe("postsToRSSItems", () => {
       title: "First Post",
       pubDate: new Date("2024-01-15"),
       link: "/blog/first-post",
-      content: "<p>First excerpt</p>",
+      description: "First description",
     });
     expect(result[1]).toEqual({
       title: "Second Post",
       pubDate: new Date("2024-01-10"),
       link: "/blog/second-post",
-      content: "<p>Second excerpt</p>",
+      description: "Second description",
     });
   });
 
   it("uses getPostUrl for link generation", () => {
-    const posts = [
-      mockPostWithExcerpt(
-        "2024-01-01-test-post.md",
-        "Test Post",
-        "2024-01-01",
-      ),
-    ];
+    const posts = [mockPost("2024-01-01-test-post.md", "Test Post", "2024-01-01")];
 
     const result = postsToRSSItems(posts);
 
     expect(result[0].link).toBe("/blog/test-post");
   });
 
-  it("includes excerpt HTML in content field", () => {
-    const posts = [
-      mockPostWithExcerpt(
-        "2024-01-01-test-post.md",
-        "Test Post",
-        "2024-01-01",
-        "<p>Custom <strong>HTML</strong> excerpt</p>",
-      ),
-    ];
+  it("handles posts without description", () => {
+    const posts = [mockPost("2024-01-01-test-post.md", "Test Post", "2024-01-01")];
 
     const result = postsToRSSItems(posts);
 
-    expect(result[0].content).toBe("<p>Custom <strong>HTML</strong> excerpt</p>");
+    expect(result[0].description).toBeUndefined();
   });
 
   it("handles empty posts array", () => {
@@ -176,7 +141,7 @@ describe("postsToRSSItems", () => {
   it("preserves post date as pubDate", () => {
     const testDate = new Date("2024-06-15T12:30:00Z");
     const posts = [
-      mockPostWithExcerpt("2024-06-15-dated-post.md", "Dated Post", testDate.toISOString()),
+      mockPost("2024-06-15-dated-post.md", "Dated Post", testDate.toISOString()),
     ];
 
     const result = postsToRSSItems(posts);

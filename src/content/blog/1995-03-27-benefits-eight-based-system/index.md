@@ -2,12 +2,13 @@
 layout: post
 title:  "The Benefits of an Eight-Based System"
 date:   1995-03-27
+description: "When humans first began to count, they used their ten fingers as a basis for numeration. This led to the adoption of the ten-based system into everyday life."
 categories: numerics binary octal
 ---
 
 When humans first began to count, they used their ten fingers as a basis for numeration. This led to the adoption of the ten-based system into everyday life. Infinately many number systems can be used, but a few stand out as the most practical. These include the two-, eight- and ten-based systems. If humans would switch from a ten-based system to an eight-based system, there would be greater efficiency between humans and machines because of the relationship of the eight-based system to the computer's two-based system.
 
-<!--more-->
+
 
 Humans rely on a ten-based system, consisting of the coefficients of the powers of ten (Asimov 30). "Our ordinary numbers are simply the ten-based system, working on a series of powerse of ten," (Asimov 30). To humans, the ten-based system seems just right, having only ten digits to memorize and the ability to reach any number under 10,000 using only four digits (Asimov 34). There is, however, nothing basic or fundamental about ordinary numbers, it is just one of infinately many systems of numeration (Asimov 30).
 

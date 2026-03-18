@@ -2,6 +2,7 @@
 layout: post
 title:  "Registry Hacks! IsInstallationInProgress"
 date: 2015-09-18
+description: "I was doing a repair on Visual Studio 2015 and it seemed to be stuck at the end. After killing the installer, VS showed a persistent Repair/Modify error dialog blocking further work."
 categories: visualstudio hacks powershell
 ---
 
@@ -9,7 +10,6 @@ I was doing a repair on Visual Studio 2015 and it seemed to be stuck at the end,
 
 <blockquote>Repair/Modify operation did not finish successfully. Please repair Visual Studio before continuing. You may continue to run Visual Studio, but operation may not be reliable.</blockquote>
 
-<!--more-->
 
 But I had work to do and was pretty confident that VS in its current state would take me through the day. I had to jump between a couple different projects that day and each time I would see:
 

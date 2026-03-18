@@ -2,6 +2,7 @@
 layout: post
 title:  "Get More Value from your Test Asserts"
 date:   2017-04-05
+description: "There's more than one way to skin an assertion. The thing to keep in mind is how the next developer (or you in 6 months) is going to use the information if an assertion fails."
 categories: testing
 ---
 
@@ -9,7 +10,6 @@ categories: testing
 
 There's more than one way to skin an assertion. The thing to keep in mind is how the next developer (obligatory "or you in 6 months") is going to use the information if an assertion fails.
 
-<!--more-->
 
 We'll be using MSTest to describe the situation, but this is just as valid in NUnit.
 

@@ -2,6 +2,7 @@
 layout: post
 title:  "Install OpenSSL on Windows using Chocolatey"
 date: 2015-10-28
+description: "The Windows binaries that the OpenSSL project will point you to are linked, but installing via Chocolatey is preferable. Currently there's no Chocolatey package for OpenSSL."
 categories: chocolatey powershell
 ---
 
@@ -9,7 +10,6 @@ categories: chocolatey powershell
 
 The Windows binaries that the [OpenSSL project](https://www.openssl.org) will point you to are linked from [this page](https://www.openssl.org/community/binaries.html). But I sure do like installing all the things via [Chocolatey](https://chocolatey.org)these days. Currently there's no Chocolatey package for OpenSSL.
 
-<!--more-->
 
 I do have it available on my main Windows computer's command line.. Now how did it get there?
 

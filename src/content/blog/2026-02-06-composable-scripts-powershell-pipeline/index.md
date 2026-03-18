@@ -9,7 +9,6 @@ Back in 2016 I wrote a small PowerShell library called [posh-fluent-migrator](ht
 
 What I didn't call focus to at the time was that the interesting part wasn't the scripts themselves. It was how they were meant to be used together.
 
-<!--more-->
 
 ## The Setup
 

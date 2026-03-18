@@ -1,6 +1,5 @@
 import type { CollectionEntry } from "astro:content";
 import type { RSSFeedItem } from "@astrojs/rss";
-import type { PostWithExcerpt } from "./excerpts";
 import { getPostUrl } from "./slugs";
 
 /**
@@ -20,16 +19,18 @@ export function sortAndLimitPosts<T extends CollectionEntry<"blog">>(
 }
 
 /**
- * Transforms blog posts with excerpts into RSS feed items.
+ * Transforms blog posts into RSS feed items.
  *
- * @param posts - Array of posts with processed excerpts
- * @returns Array of RSS items with title, date, link, and content
+ * @param posts - Array of blog post collection entries
+ * @returns Array of RSS items with title, date, link, and description
  */
-export function postsToRSSItems(posts: PostWithExcerpt[]): RSSFeedItem[] {
+export function postsToRSSItems(
+  posts: CollectionEntry<"blog">[],
+): RSSFeedItem[] {
   return posts.map((post) => ({
     title: post.data.title,
     pubDate: post.data.date,
     link: getPostUrl(post.id),
-    content: post.excerptHtml,
+    description: post.data.description,
   }));
 }

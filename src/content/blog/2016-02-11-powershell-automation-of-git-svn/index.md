@@ -2,6 +2,7 @@
 layout: post
 title:  "PowerShell Automation of git-svn"
 date: 2016-02-11
+description: "Once you get frustrated with versioning via folder copies, you'll have to decide what VCS to use. git-svn lets you use git as your client to a svn repository."
 categories: powershell git svn git-svn
 ---
 
@@ -11,7 +12,6 @@ categories: powershell git svn git-svn
 
 Once you get frustrated with versioning via folder copies, you’ll have to decide what Version Control System to use. Subversion (svn) is a workhorse of a centralized version control system, and still very popular. I prefer to work with a Distributed VCS, and git is my choice there. <a href="http://git-scm.com/docs/git-svn">git-svn</a> is the way you can use git as your client to a svn repository.
 
-<!--more-->
 
 Working with git locally means I can create local branches to work in, commit small changes locally, and push the commits to the svn server in batches when I'm ready to share my changes. Let's start working in a new feature branch.
 

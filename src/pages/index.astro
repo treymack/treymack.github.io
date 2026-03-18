@@ -4,13 +4,10 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import FormattedDate from "../components/FormattedDate.astro";
 import { SITE_TITLE } from "../consts";
 import { getPostUrl } from "../utils/slugs";
-import { processPostsExcerpts } from "../utils/excerpts";
 
 const posts = (await getCollection("blog")).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
-
-const postsWithExcerpts = await processPostsExcerpts(posts);
 ---
 
 <BaseLayout title={SITE_TITLE}>
@@ -19,7 +16,7 @@ const postsWithExcerpts = await processPostsExcerpts(posts);
 
     <ul class="post-list list-none p-0">
       {
-        postsWithExcerpts.map((post) => (
+        posts.map((post) => (
           <li class="mb-8">
             <span class="post-meta text-gray-600 text-sm">
               <FormattedDate date={post.data.date} />
@@ -34,17 +31,9 @@ const postsWithExcerpts = await processPostsExcerpts(posts);
               </a>
             </h2>
 
-            {post.excerptHtml && (
+            {post.data.description && (
               <div class="post-excerpt prose prose-lg max-w-none text-gray-700">
-                <Fragment set:html={post.excerptHtml} />
-                {post.hasMore && (
-                  <a
-                    href={getPostUrl(post.id)}
-                    class="more-link text-blue-600 hover:text-blue-800"
-                  >
-                    more ...
-                  </a>
-                )}
+                <p>{post.data.description}</p>
               </div>
             )}
           </li>

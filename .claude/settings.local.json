@@ -31,7 +31,12 @@
       "Bash(gh repo view:*)",
       "Bash(gh api:*)",
       "WebFetch(domain:docs.astro.build)",
-      "Bash(npx vitest:*)"
+      "Bash(npx vitest:*)",
+      "Bash(else echo:*)",
+      "Bash(fi)",
+      "Bash(done)",
+      "Bash(grep:*)",
+      "Bash(npm remove:*)"
     ],
     "deny": [],
     "ask": []
