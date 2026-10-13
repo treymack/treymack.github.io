@@ -53,11 +53,12 @@ test.describe("Site pages", () => {
 
     for (let i = 0; i < count; i++) {
       const img = images.nth(i);
+      // Images are loading="lazy", so scroll to each one and wait for it to load
+      await img.scrollIntoViewIfNeeded();
       await expect(img).toBeVisible();
-      const naturalWidth = await img.evaluate(
-        (el: HTMLImageElement) => el.naturalWidth,
-      );
-      expect(naturalWidth).toBeGreaterThan(0);
+      await expect
+        .poll(() => img.evaluate((el: HTMLImageElement) => el.naturalWidth))
+        .toBeGreaterThan(0);
     }
   });
 
