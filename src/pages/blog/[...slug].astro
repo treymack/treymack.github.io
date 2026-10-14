@@ -1,10 +1,11 @@
 ---
 import { type CollectionEntry, getCollection, render } from "astro:content";
 import PostLayout from "../../layouts/PostLayout.astro";
-import { getSlugFromPostId } from "../../utils/slugs";
+import { assertUniqueSlugs, getSlugFromPostId } from "../../utils/slugs";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
+  assertUniqueSlugs(posts.map((post) => post.id));
   return posts.map((post) => ({
     params: { slug: getSlugFromPostId(post.id) },
     props: post,
