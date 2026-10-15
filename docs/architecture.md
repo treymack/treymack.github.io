@@ -95,7 +95,7 @@ flowchart TB
 
   subgraph blog["Trey Mack Blog [Software System]"]
     content["<b>Content Store</b><br/>[Container]<br/>Markdown/MDX + co-located images<br/>src/content/{blog,about}/<br/>schema: src/content.config.ts"]
-    ssg["<b>Static Site Generator</b><br/>[Container]<br/>Astro 5 + MDX + Tailwind v4, Node 20<br/>src/pages/, layouts/, components/,<br/>utils/; RSS + sitemap integrations"]
+    ssg["<b>Static Site Generator</b><br/>[Container]<br/>Astro 5 + MDX + Tailwind v4, Node 22<br/>src/pages/, layouts/, components/,<br/>utils/; RSS + sitemap integrations"]
     site["<b>Static Website</b><br/>[Container]<br/>GitHub Pages, www.treymack.com<br/>HTML, CSS, images,<br/>feed.xml, sitemap-index.xml"]
     client["<b>Client Scripts</b><br/>[Container: JS]<br/>runs in the browser:<br/>ClientRouter view transitions<br/>Giscus loader, re-run per navigation<br/>About page random entry<br/>Google Analytics snippet"]
   end
@@ -147,7 +147,7 @@ flowchart TB
 |             |                                                               v                        |
 |             |                                           +--------------------------------------+     |
 |             |                                           | Static Site Generator    [Container] |     |
-|             |                                           | Astro 5 + MDX + Tailwind v4, Node 20 |runs |
+|             |                                           | Astro 5 + MDX + Tailwind v4, Node 22 |runs |
 |             |                                           | src/pages/, layouts/, components/,   |<-+  |
 |             |                                           | utils/; RSS + sitemap integrations   |  |  |
 |             |                                           +-------------------+------------------+  |  |
