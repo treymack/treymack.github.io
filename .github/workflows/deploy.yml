@@ -3,6 +3,10 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [master]
+  # Merges made by the Dependabot auto-merge workflow use GITHUB_TOKEN, which
+  # does not trigger push workflows, so publish them on a schedule instead.
+  schedule:
+    - cron: "0 14 * * 1"
   workflow_dispatch:
 
 permissions:

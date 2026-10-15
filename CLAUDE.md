@@ -112,6 +112,7 @@ draft: true # optional, default false
 - Pull requests to `master` run `.github/workflows/ci.yml`: build, then unit and e2e tests
 - Push to `master` triggers `.github/workflows/deploy.yml`, which builds and deploys to GitHub Pages. It does not run tests, so CI on the PR is the only gate
 - Dependabot (`.github/dependabot.yml`) opens grouped weekly PRs, and `.github/workflows/dependabot-auto-merge.yml` enables auto-merge on non-major ones, which merge once `build-and-test` passes. Major bumps are manual; `astro` and `@astrojs/*` majors are ignored until the Astro migration is done
+- Merges made by the auto-merge workflow use `GITHUB_TOKEN`, so they do not trigger the push deploy. `deploy.yml` also runs weekly (Mondays) and via `workflow_dispatch` to publish them
 - `npm` 11.2 crashes (`Cannot read properties of null (reading 'edgesOut')`) resolving `vitest@4.1.x` peers; install with `--legacy-peer-deps` if you hit it
 
 ## Git Commits and Pull Requests
