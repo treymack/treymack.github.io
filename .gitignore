@@ -34,3 +34,4 @@ vendor/bundle
 *.swo
 *.swn
 *~
+test-results/.last-run.json
