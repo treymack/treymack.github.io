@@ -48,6 +48,8 @@ npx prettier --write <file>
 
 **Tech Stack**: Astro 5 + Tailwind CSS v4 + MDX
 
+`docs/architecture.md` has C4 System Context and Container diagrams. Update them when adding or removing an external service, content collection, hosting target, or workflow. Component-level diagrams are deliberately not kept in the repo because they change too often.
+
 **Content System**:
 
 - Two content collections are defined in `src/content.config.ts`: `blog` and `about`
@@ -119,3 +121,4 @@ When creating commits and pull requests:
 - Always create PRs to run CI checks before merging to master
 - Use clear, descriptive commit messages and PR titles
 - Structure PR descriptions with Summary and Test plan sections
+- Issues can be labeled `priority: low` for nice-to-have work with no user-visible impact
