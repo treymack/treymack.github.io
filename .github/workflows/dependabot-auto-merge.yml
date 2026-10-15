@@ -19,9 +19,16 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Enable auto-merge for non-major updates
-        if: steps.metadata.outputs.update-type != 'version-update:semver-major'
-        run: gh pr merge --auto --squash "$PR_URL"
+      # Grouped PRs can leave `update-type` empty, so check every updated
+      # dependency and require each to be an explicit minor or patch bump.
+      - name: Enable auto-merge for minor/patch-only updates
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          UPDATES: ${{ steps.metadata.outputs.updated-dependencies-json }}
+        run: |
+          if echo "$UPDATES" | jq -e 'length > 0 and all(.[]; .updateType == "version-update:semver-minor" or .updateType == "version-update:semver-patch")' > /dev/null; then
+            gh pr merge --auto --squash "$PR_URL"
+          else
+            echo "Skipping auto-merge: update includes a major or unknown bump"
+          fi
