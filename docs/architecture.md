@@ -19,7 +19,7 @@ flowchart TB
 
   blog["<b>Trey Mack Blog</b><br/>[Software System]<br/>Static Astro site hosted on GitHub Pages:<br/>posts, About page, RSS feed, sitemap"]
 
-  actions["<b>GitHub Actions</b><br/>[External System]<br/>ci.yml: build + unit + e2e on PRs<br/>deploy.yml: build + publish to<br/>GitHub Pages on push to master"]
+  actions["<b>GitHub Actions</b><br/>[External System]<br/>ci.yml: build + unit + e2e on PRs<br/>deploy.yml: build + publish to<br/>GitHub Pages on push to master<br/>dependabot-auto-merge.yml: merges<br/>non-major Dependabot PRs after CI"]
   giscus["<b>Giscus</b><br/>[External System]<br/>Comment widget; threads<br/>keyed by page pathname"]
   ga["<b>Google Analytics</b><br/>[External System]<br/>Pageview tracking<br/>(treymack.com only)"]
   social["<b>LinkedIn / GitHub / Twitter</b><br/>[External Systems]<br/>Profiles (plain links)"]
@@ -57,7 +57,7 @@ flowchart TB
                    v                                                                  v
   +================================================+            +------------------------------------+
   | [Software System]                              |            | [External System]                  |
-  | Trey Mack Blog                                 |  deploys   | GitHub Actions                     |
+  | Trey Mack Blog                                 |  deploys   | GitHub Actions + Dependabot        |
   | Static Astro site hosted on GitHub Pages:      |<-----------| ci.yml: build + unit + e2e on PRs  |
   | posts, About page, RSS feed, sitemap           |            | deploy.yml: build + publish to     |
   +==========+=============================+===+===+            | GitHub Pages on push to master     |
@@ -102,7 +102,7 @@ flowchart TB
 
   giscus["<b>Giscus</b><br/>[External System]<br/>threads keyed by pathname"]
   ga["<b>Google Analytics</b><br/>[External System]"]
-  actions["<b>GitHub Actions</b><br/>[External System]<br/>ci.yml: build + tests on PRs<br/>deploy.yml: on push to master, runs<br/>the build and uploads dist/ to Pages"]
+  actions["<b>GitHub Actions</b><br/>[External System]<br/>ci.yml: build + tests on PRs<br/>deploy.yml: on push to master, runs<br/>the build and uploads dist/ to Pages<br/>dependabot-auto-merge.yml: merges<br/>non-major Dependabot PRs after CI"]
   discussions["<b>GitHub Discussions</b><br/>[External System]<br/>treymack/treymack.github.io<br/>category: Announcements"]
 
   reader -->|"browses the site,<br/>reads RSS (HTTPS)"| client
@@ -167,7 +167,7 @@ flowchart TB
               v                            v                                                        |
 +---------------------------+  +----------------------+     +----------------------------------------+
 | [External System]         |  | [External System]    |     | [External System]                      |
-| Giscus                    |  | Google Analytics     |     | GitHub Actions                         |
+| Giscus                    |  | Google Analytics     |     | GitHub Actions + Dependabot            |
 | threads keyed by pathname |  +----------------------+     | ci.yml: build + tests on PRs           |
 +-------------+-------------+                               | deploy.yml: on push to master, runs    |
               | stores threads in                           | the build and uploads dist/ to Pages   |
