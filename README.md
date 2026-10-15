@@ -1,6 +1,8 @@
 # treymack.github.io
 
-Personal blog hosted at <http://treymack.github.io> and <https://treymack.com>
+Personal blog hosted at <https://www.treymack.com>
+
+See [docs/architecture.md](docs/architecture.md) for C4 architecture diagrams.
 
 ## Tech Stack
 
@@ -14,7 +16,7 @@ This site is built with [Astro](https://astro.build/) and styled with [Tailwind 
 - ✅ Syntax highlighting for code blocks
 - ✅ RSS feed at `/feed.xml`
 - ✅ Automatic sitemap generation
-- ✅ Google Analytics integration
+- ✅ Comments via Giscus (GitHub Discussions)
 - ✅ SEO-friendly with canonical URLs
 
 ## Local Development
@@ -75,28 +77,33 @@ Changes pushed to the `master` branch are automatically built and published to G
 
 The deployment workflow:
 
-1. Runs `npm install` and `npm run build`
+1. Runs `npm ci` and `npm run build`
 2. Uploads the `dist/` folder
 3. Deploys to GitHub Pages
 
 ## Project Structure
 
 ```monospace
+├── docs/                # Architecture diagrams
 ├── public/              # Static assets (images, favicon, etc.)
 ├── src/
 │   ├── components/      # Astro components (Header, Footer, etc.)
 │   ├── content/
-│   │   └── blog/        # Blog posts (Markdown)
+│   │   ├── about/       # About page entries (one shown at random)
+│   │   └── blog/        # Blog posts, one folder per post
 │   ├── layouts/         # Page layouts
-│   ├── pages/           # Routes (index, about, blog posts)
-│   └── styles/          # Global CSS
-├── astro.config.mjs     # Astro configuration
+│   ├── pages/           # Routes (index, about, blog posts, feed.xml)
+│   ├── styles/          # Global CSS
+│   ├── utils/           # Slug, feed, and date helpers (+ unit tests)
+│   └── content.config.ts # Content collection schemas
+├── tests/               # Playwright e2e tests
+├── astro.config.ts      # Astro configuration
 └── package.json         # Dependencies
 ```
 
 ## Adding Blog Posts
 
-Blog posts are stored in `src/content/blog/` as Markdown files.
+Each post lives in its own folder under `src/content/blog/`, named `YYYY-MM-DD-slug/index.md`. Images go in the same folder and are referenced with relative paths (e.g. `./image.png`).
 
 **Frontmatter format:**
 
@@ -104,10 +111,11 @@ Blog posts are stored in `src/content/blog/` as Markdown files.
 ---
 title: "Your Post Title"
 date: 2025-01-21
+description: Short summary, used as the home page excerpt and RSS description
 categories: category-name
 ---
 
-Your content here...
+Your content here..
 ```
 
-Posts are automatically available at `/blog/post-title-slug/`
+The date prefix is dropped from the URL, so `2025-01-21-my-post/index.md` is served at `/blog/my-post/`.
