@@ -7,7 +7,42 @@ These diagrams follow the [C4 model](https://c4model.com/) at its first two leve
 
 The site is fully static. Astro renders everything to `dist/` at build time, so there is no server or database at runtime. The only code that runs live is the browser JavaScript, which calls out to Giscus and Google Analytics.
 
+Each diagram is drawn in Mermaid, which GitHub renders. Each Mermaid diagram has an ASCII version below it for reading in a terminal or editor. Keep the two in sync.
+
 ## System Context
+
+```mermaid
+%%{init: {"flowchart": {"wrappingWidth": 320}}}%%
+flowchart TB
+  reader["<b>Reader</b><br/>[Person]<br/>Reads posts, follows RSS,<br/>leaves comments"]
+  author["<b>Author (Trey Mack)</b><br/>[Person]<br/>Writes Markdown posts,<br/>opens PRs to master"]
+
+  blog["<b>Trey Mack Blog</b><br/>[Software System]<br/>Static Astro site hosted on GitHub Pages:<br/>posts, About page, RSS feed, sitemap"]
+
+  actions["<b>GitHub Actions</b><br/>[External System]<br/>ci.yml: build + unit + e2e on PRs<br/>deploy.yml: build + publish to<br/>GitHub Pages on push to master"]
+  giscus["<b>Giscus</b><br/>[External System]<br/>Comment widget; threads<br/>keyed by page pathname"]
+  ga["<b>Google Analytics</b><br/>[External System]<br/>Pageview tracking<br/>(treymack.com only)"]
+  social["<b>LinkedIn / GitHub / Twitter</b><br/>[External Systems]<br/>Profiles (plain links)"]
+  discussions["<b>GitHub Discussions</b><br/>[External System]<br/>treymack/treymack.github.io<br/>category: Announcements"]
+
+  reader -->|"browses www.treymack.com,<br/>reads /feed.xml (HTTPS)"| blog
+  author -->|"git push / PR"| actions
+  actions -->|"deploys"| blog
+  blog -->|"embeds comments"| giscus
+  blog -->|"loads analytics"| ga
+  blog -->|"links out to"| social
+  giscus -->|"stores threads in"| discussions
+
+  classDef person fill:#08427b,stroke:#052e56,color:#fff
+  classDef system fill:#1168bd,stroke:#0b4884,color:#fff
+  classDef external fill:#8a8a8a,stroke:#6b6b6b,color:#fff
+  class reader,author person
+  class blog system
+  class actions,giscus,ga,social,discussions external
+```
+
+<details>
+<summary>ASCII version</summary>
 
 ```text
     +----------------------------+                                    +------------------------------+
@@ -48,7 +83,49 @@ The site is fully static. Astro renders everything to `dist/` at build time, so 
 Legend:  +====+ system in scope    +----+ person / external system
 ```
 
+</details>
+
 ## Containers
+
+```mermaid
+%%{init: {"flowchart": {"wrappingWidth": 320}}}%%
+flowchart TB
+  reader["<b>Reader</b><br/>[Person]"]
+  author["<b>Author (Trey Mack)</b><br/>[Person]"]
+
+  subgraph blog["Trey Mack Blog [Software System]"]
+    content["<b>Content Store</b><br/>[Container]<br/>Markdown/MDX + co-located images<br/>src/content/{blog,about}/<br/>schema: src/content.config.ts"]
+    ssg["<b>Static Site Generator</b><br/>[Container]<br/>Astro 5 + MDX + Tailwind v4, Node 20<br/>src/pages/, layouts/, components/,<br/>utils/; RSS + sitemap integrations"]
+    site["<b>Static Website</b><br/>[Container]<br/>GitHub Pages, www.treymack.com<br/>HTML, CSS, images,<br/>feed.xml, sitemap-index.xml"]
+    client["<b>Client Scripts</b><br/>[Container: JS]<br/>runs in the browser:<br/>ClientRouter view transitions<br/>Giscus loader, re-run per navigation<br/>About page random entry<br/>Google Analytics snippet"]
+  end
+
+  giscus["<b>Giscus</b><br/>[External System]<br/>threads keyed by pathname"]
+  ga["<b>Google Analytics</b><br/>[External System]"]
+  actions["<b>GitHub Actions</b><br/>[External System]<br/>ci.yml: build + tests on PRs<br/>deploy.yml: on push to master, runs<br/>the build and uploads dist/ to Pages"]
+  discussions["<b>GitHub Discussions</b><br/>[External System]<br/>treymack/treymack.github.io<br/>category: Announcements"]
+
+  reader -->|"browses the site,<br/>reads RSS (HTTPS)"| client
+  author -->|"writes posts,<br/>opens PRs"| content
+  content -->|"read at build time"| ssg
+  ssg -->|"emits dist/"| site
+  site -->|"delivers"| client
+  actions -->|"runs"| ssg
+  client -->|"loads widget"| giscus
+  client -->|"pageviews"| ga
+  giscus -->|"stores threads in"| discussions
+
+  classDef person fill:#08427b,stroke:#052e56,color:#fff
+  classDef container fill:#438dd5,stroke:#2e6295,color:#fff
+  classDef external fill:#8a8a8a,stroke:#6b6b6b,color:#fff
+  class reader,author person
+  class content,ssg,site,client container
+  class giscus,ga,actions,discussions external
+  style blog fill:none,stroke:#0b4884,stroke-width:2px,stroke-dasharray:6 4
+```
+
+<details>
+<summary>ASCII version</summary>
 
 ```text
   +----------------------+                                            +------------------------------+
@@ -104,6 +181,8 @@ Legend:  +====+ system in scope    +----+ person / external system
 
 Legend:  +====+ system boundary    +----+ person / container / external system
 ```
+
+</details>
 
 ## Keeping this current
 
