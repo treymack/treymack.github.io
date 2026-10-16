@@ -36,7 +36,9 @@
       "Bash(fi)",
       "Bash(done)",
       "Bash(grep:*)",
-      "Bash(npm remove:*)"
+      "Bash(npm remove:*)",
+      "PowerShell(git mv *)",
+      "PowerShell(npm run *)"
     ],
     "deny": [],
     "ask": []

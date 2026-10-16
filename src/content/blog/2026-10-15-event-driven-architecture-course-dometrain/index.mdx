@@ -5,6 +5,8 @@ description: A short summary of my new Event-Driven Architecture course at Domet
 tags: ["event-driven-architecture", "dometrain"]
 ---
 
+import EventBusDemo from "../../../components/EventBusDemo.astro";
+
 I just signed up for Dometrain and am perusing the catalog of courses. I noticed they have a new course on Event-Driven Architecture, which is probably worth a refresher for me. I plan to take it and will share my thoughts here once I do.
 
 The author is asking learners to take some time at the start of each module to perform an exercise. That's really what this post is for, to house my attempt at those exercises, and notes as I go.
@@ -25,6 +27,10 @@ Pizza Store
   - Pick-Up Service
   - Delivery Service
   - Loyalty Point Service (new, not in critical path)
+
+Try it: place a few orders, then subscribe the Loyalty service and place another. The publisher code never changes.
+
+<EventBusDemo />
 
 > The appropriate level of coupling depends o the level of control you have over the endpoints.
 >
