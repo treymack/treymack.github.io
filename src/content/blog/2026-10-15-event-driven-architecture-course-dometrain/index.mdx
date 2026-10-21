@@ -76,7 +76,7 @@ Channel Types
 
 Observability is a challenge, there will be solutions later.
 
-## Build a simple producer
+## Build a Simple Producer
 
 Again, the upfront question before the module starts:
 
@@ -88,6 +88,31 @@ Again, the upfront question before the module starts:
   - Make only forward compatible changes as existing consumers will still be deployed when newer versions of the producer are deployed
     - Yes the naming of backward vs forward compatible schemas is confusing
 
+Outbox pattern
+- Use when you need state saved and event publishing to be transactional
+- Usual implentation is an Outbox table in the same DB as your state
+  - INSERT to all state tables AND the outbox table in the same transaction
+  - Return success to the user
+  - Background worker comes along later and picks up messages from the outbox table
+  - Publishes to the message bus (RabbitMQ etc)
+  - UPDATE or DELETE from the outbox table to mark the message as processed
+
 - [ ] Implement a producer with 2 events
 
-## Build a simple consumer
+## Build a Simple Consumer
+
+Consumer responsibilities
+- Plan for ingestion rate
+  - Maybe introduce a queue/inbox for yourself
+- Plan for failure
+  - Retries are great, but not forever
+  - Dead letter queue to handle Poison pill message
+  - Be sure to manage your DLQ
+- Plan for idempotency
+  - May well get the same message more than once
+  - Check incoming IDs to see if you've already processed it
+
+- [ ] Implement a consumer with 2 events
+
+## EDA in Practice
+
