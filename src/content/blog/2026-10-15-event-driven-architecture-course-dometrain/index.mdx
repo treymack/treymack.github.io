@@ -75,3 +75,19 @@ Channel Types
   - Offset-based, append-only, immutable, partitioned log
 
 Observability is a challenge, there will be solutions later.
+
+## Build a simple producer
+
+Again, the upfront question before the module starts:
+
+- What does it mean to be a good producer? What do you need to think about?
+  - Maintain an event schema
+    - Well-named events
+    - Identify source
+    - Align to Cloud Events, probably
+  - Make only forward compatible changes as existing consumers will still be deployed when newer versions of the producer are deployed
+    - Yes the naming of backward vs forward compatible schemas is confusing
+
+- [ ] Implement a producer with 2 events
+
+## Build a simple consumer
