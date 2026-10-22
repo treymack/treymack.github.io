@@ -116,3 +116,25 @@ Consumer responsibilities
 
 ## EDA in Practice
 
+Most important things as EDA systems get more complex? My current guess:
+- Observability
+- e2e Testing
+- Performance Testing
+
+Notifying the user
+- Polling
+- Web Sockets / Server-Sent Events / Long polling (SignalR)
+
+Versioning
+- Create new version of an event
+- Mark the older event as deprecated
+- Publish both versions for a while
+- Deprecate the older event as a predetermined and well know date
+  - Don't want to keep maintaining infinite versions
+
+Application Failures
+- Durable storage of messages lets processes pick up where they left off
+- Process can get stuck with Choreography if one service is offline or erroring
+- Orchestration may be the fix
+
+
