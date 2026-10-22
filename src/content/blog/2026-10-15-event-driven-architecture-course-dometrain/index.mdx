@@ -175,3 +175,41 @@ Adds a layer of complexity vs Choreography
 Useful withing a particular Bounded Context
 
 - When you need to handle compensating transactions, cancellation, etc
+
+## Observability in EDA
+
+Distributed tracing is the most important tool to understand an evolving EDA
+
+Context and Tags
+- There are lots of well-known `messaging.message.*` tags in OTel
+- Allows search and correlation between messages across systems
+- Can view downstream subscribers to a particular `event.v` name if they opt in to tracing
+
+Span Links
+- New info about OTel for me!
+- Trace parent is usually propagated to new spans, but you can skip that
+  - Use Span Link
+  - Results in a new Trace in the OTel viewer
+  - Useful to decouple event traces that will be handled much later, like in a batch
+  - Still references the previous span, but doesn't clutter UI
+
+Metrics / Alerting
+- Metrics to watch. If they change over time, something to look into
+  - Queue depth
+  - Count / size of published / consumed messages
+  - Message age
+  - In flight latency
+  - Event type count
+  - Processing error count
+
+Documentation
+- How do other teams know what events are available for consumption?
+- AsyncAPI is the preferred spec!
+  - Backstage is a way to build internal developer platforms
+  - EventCatalog give you a visual interface to events in your system
+    - Shows producers and consumers of a particular `event.v`
+  - Saunter is a .Net package that can generate AsyncAPI like Swagger is generated
+    - Customized with attributes
+    - That's why there's a separate publish method per event type instead of `<T>`
+  - This is all CI friendly
+
