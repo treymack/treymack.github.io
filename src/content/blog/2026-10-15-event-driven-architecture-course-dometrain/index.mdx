@@ -213,3 +213,21 @@ Documentation
     - That's why there's a separate publish method per event type instead of `<T>`
   - This is all CI friendly
 
+Testing
+- Contract / Schema Testing
+  - Basic stuff
+    - Obtain event JSON (or whatever) from real prod code
+    - Use JsonSchema class to validate the event JSON
+    - Fail to flag breaking changes
+    - If you NEED to make a breaking change, new event version
+- Integration Testing
+  - Yes, publish events that the SUT would publish, ALSO
+  - Write events you expect to receive to the broker
+    - This way you can test happy path and failures like a bad message format
+- Failure Testing
+- Idempotency Testing
+  - Make sure consumers can handle duplicate events
+  - Check the unique id of the event
+  - Use business rules to make sure there's not a dupe event with diff ids
+    - Like a new message for the KitchenService with the same parent orderid
+    - This might result from a bug in the publisher's outbox worker
