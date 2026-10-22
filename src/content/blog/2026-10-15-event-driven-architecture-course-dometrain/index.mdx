@@ -89,6 +89,7 @@ Again, the upfront question before the module starts:
     - Yes the naming of backward vs forward compatible schemas is confusing
 
 Outbox pattern
+
 - Use when you need state saved and event publishing to be transactional
 - Usual implentation is an Outbox table in the same DB as your state
   - INSERT to all state tables AND the outbox table in the same transaction
@@ -102,6 +103,7 @@ Outbox pattern
 ## Build a Simple Consumer
 
 Consumer responsibilities
+
 - Plan for ingestion rate
   - Maybe introduce a queue/inbox for yourself
 - Plan for failure
@@ -117,15 +119,18 @@ Consumer responsibilities
 ## EDA in Practice
 
 Most important things as EDA systems get more complex? My current guess:
+
 - Observability
 - e2e Testing
 - Performance Testing
 
 Notifying the user
+
 - Polling
 - Web Sockets / Server-Sent Events / Long polling (SignalR)
 
 Versioning
+
 - Create new version of an event
 - Mark the older event as deprecated
 - Publish both versions for a while
@@ -133,6 +138,7 @@ Versioning
   - Don't want to keep maintaining infinite versions
 
 Application Failures
+
 - Durable storage of messages lets processes pick up where they left off
 - Process can get stuck with Choreography if one service is offline or erroring
 - Orchestration may be the fix
@@ -140,11 +146,13 @@ Application Failures
 ## Orchestration
 
 What's it mean to me right now?
+
 - Process or workflow that publishes events and subscribes to responses
 - There are steps in the workflow that can be retried or compensated on error
 - Easier to debug that Choreography since it's a linear process
 
 Temporal
+
 - Supports many languages, .Net/Python/JS included
 - Visualize event-driven workflows on a timeline
 - Facilities to trigger outgoing events
@@ -152,15 +160,18 @@ Temporal
 - Time delays to wait for incoming events
 
 Orchestration enables async commands
+
 - Because you can wait as long as neeed
 - Can work around HTTP timeouts
 - Use a dedicated channel so they're not in the public event channel(s)
 
 Saga Pattern
+
 - A way to issue compensating actions
 - Avoids distributed transactions / 2 phase commits
   - Which are objectively bad
 
 Adds a layer of complexity vs Choreography
 Useful withing a particular Bounded Context
+
 - When you need to handle compensating transactions, cancellation, etc
