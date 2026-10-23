@@ -1,233 +1,88 @@
 ---
 title: "Event-Driven Architecture Course at Dometrain"
 date: 2026-10-15
-description: A short summary of my new Event-Driven Architecture course at Dometrain.
+description: Notes from Dometrain's Event-Driven Architecture course, from events and channels to outboxes, sagas, and observability.
 tags: ["event-driven-architecture", "dometrain"]
 ---
 
 import EventBusDemo from "../../../components/EventBusDemo.astro";
 
-I just signed up for Dometrain and am perusing the catalog of courses. I noticed they have a new course on Event-Driven Architecture, which is probably worth a refresher for me. I plan to take it and will share my thoughts here once I do.
+I recently signed up for Dometrain and spotted their new course on Event-Driven Architecture (EDA). It seemed like a good refresher, so I took it. Here's what stuck with me.
 
-The author is asking learners to take some time at the start of each module to perform an exercise. That's really what this post is for, to house my attempt at those exercises, and notes as I go.
+## The basics
 
-## Theory of Event-Driven Architecture
+An **event** is an immutable fact that happened in the past. An **event-driven architecture** is a communication pattern where components react to events instead of being called directly in request-response fashion.
 
-The first request is to write down my current answers to:
-
-- What is an event?
-  - A fact that happened in the past.
-- What is an event-driven architecture?
-  - A system where the components react to events, as opposed to being called in a request-response fashion.
-
-Pizza Store
-
-- Order Processing Service
-  - Kitchen Service
-  - Pick-Up Service
-  - Delivery Service
-  - Loyalty Point Service (new, not in critical path)
-
-Try it: place a few orders, then subscribe the Loyalty service and place another. The publisher code never changes.
+Think of a pizza store. Order Processing publishes `OrderCreated`, and the Kitchen, Delivery, and Pick-Up services react to it. When a Loyalty Points service comes along later, it just subscribes. Nobody has to touch Order Processing. Try it yourself:
 
 <EventBusDemo />
 
-> The appropriate level of coupling depends o the level of control you have over the endpoints.
->
-> Gregor Hohpe
+That's the big idea: EDA inverts dependencies, a bit like dependency injection. As Gregor Hohpe puts it:
 
-Event-Driven Architectures inverts dependencies (like dependency injection!) when compared to request-response systems.
+> The appropriate level of coupling depends on the level of control you have over the endpoints.
 
-- What is an event?
-  - An **immutable** fact that happened in the past that cannot be changed.
-- What is an event-driven architecture?
-  - A **communication pattern**, and a way of modelling the integration between systems.
-- Event-based system
-  - Reacts to system events like btn_Click or s3-file-uploaded
-- Event-driven system
-  - Reacts to business events like OrderCreated or TaxReturnUploaded
+A couple of distinctions I found useful:
 
-- Messages
-  - Events
-    - Notification Event (thin event that just carries ids)
-      - Often results in calls back into the publishing service, which can bog down the publisher
-    - Event Carried State Transfer (thick event)
-      - Increases coupling because more properties exposed
-  - Commands
-  - Queries
+- **Event-based** systems react to technical events like `btn_Click` or `s3-file-uploaded`. **Event-driven** systems react to business events like `OrderCreated`.
+- **Thin events** (just IDs) keep coupling low but often make consumers call back into the publisher. **Thick events** (event-carried state transfer) avoid the callbacks but expose more properties, which increases coupling.
 
-Message Channel
+### Channels
 
-- Point to Point
-- Publish / Subscribe
+- **Queue**: durable, usually unordered (SQS, RabbitMQ queues, Azure Service Bus queues).
+- **Bus / topic**: pub/sub, but generally not durable if a subscriber is offline.
+- **Stream**: pub/sub plus durability, as an append-only, partitioned log (Kafka, Kinesis, Event Hubs).
 
-Channel Types
+## Producers
 
-- Queue
-  - Durable messages (SQS, Queue type in RabbitMQ, Azure SB Queues)
-  - No guarantee ordering generally
-- Bus / Topic
-  - Pub/sub channels, most channels in EDA
-  - Generally not durable if subscriber is offline
-- Stream
-  - Kafka, Amz Kinesis, Az Event Hub
-  - Pub/sub + durability
-  - Offset-based, append-only, immutable, partitioned log
+A good producer maintains a schema: well-named events, a clear source, and probably alignment with CloudEvents. Make only forward-compatible changes, because older consumers will still be deployed when the new producer ships. (Yes, the backward/forward naming is confusing.)
 
-Observability is a challenge, there will be solutions later.
+When saving state and publishing an event must succeed together, use the **outbox pattern**:
 
-## Build a Simple Producer
+1. In one transaction, write your state and an outbox row.
+2. Return success to the user.
+3. A background worker picks up outbox rows and publishes them to the broker.
+4. The worker marks them processed (or deletes them).
 
-Again, the upfront question before the module starts:
+## Consumers
 
-- What does it mean to be a good producer? What do you need to think about?
-  - Maintain an event schema
-    - Well-named events
-    - Identify source
-    - Align to Cloud Events, probably
-  - Make only forward compatible changes as existing consumers will still be deployed when newer versions of the producer are deployed
-    - Yes the naming of backward vs forward compatible schemas is confusing
+- **Ingestion rate**: consider an inbox queue for yourself.
+- **Failure**: retry, but not forever. Send poison-pill messages to a dead letter queue, and remember to actually manage it.
+- **Idempotency**: you may well see the same message twice, so check incoming IDs.
 
-Outbox pattern
+## EDA in practice
 
-- Use when you need state saved and event publishing to be transactional
-- Usual implentation is an Outbox table in the same DB as your state
-  - INSERT to all state tables AND the outbox table in the same transaction
-  - Return success to the user
-  - Background worker comes along later and picks up messages from the outbox table
-  - Publishes to the message bus (RabbitMQ etc)
-  - UPDATE or DELETE from the outbox table to mark the message as processed
+As systems grow, observability, end-to-end testing, and performance testing matter most.
 
-- [ ] Implement a producer with 2 events
+- **Notifying users**: polling, or WebSockets / Server-Sent Events / long polling (SignalR).
+- **Versioning**: publish a new event version, mark the old one deprecated, publish both for a while, then retire the old one on a well-communicatd date. Nobody wants to maintain infinite versions.
+- **Failures**: durable messages let processes pick up where they left off, but choreography can get stuck when one service is down. Orchestration can help.
 
-## Build a Simple Consumer
+## Orchestration and sagas
 
-Consumer responsibilities
+An orchestrator is a workflow that publishes events and listens for responses. Steps can be retried or compensated on error, and since it's a linear process it's easier to debug than choreography.
 
-- Plan for ingestion rate
-  - Maybe introduce a queue/inbox for yourself
-- Plan for failure
-  - Retries are great, but not forever
-  - Dead letter queue to handle Poison pill message
-  - Be sure to manage your DLQ
-- Plan for idempotency
-  - May well get the same message more than once
-  - Check incoming IDs to see if you've already processed it
+The course demoed [Temporal](https://temporal.io/), which supports .NET, Python, and JS. It can visualize workflows on a timeline, trigger outgoing events, listen for incoming ones, and wait as long as needed. That last bit makes async commands possible and sidesteps HTTP timeouts. Use a dedicated channel for async commands so they stay out of the public event channels.
 
-- [ ] Implement a consumer with 2 events
+The **saga pattern** issues compensating actions and avoids distributed transactions (two-phase commits, which are objectively bad). It adds complexity over choreography, so save it for within a bounded context when you need cancellation or compensation.
 
-## EDA in Practice
+## Observability
 
-Most important things as EDA systems get more complex? My current guess:
+Distributed tracing is the most important tool for understanding an evolving EDA.
 
-- Observability
-- e2e Testing
-- Performance Testing
+- **Tags**: OpenTelemetry has well-known `messaging.message.*` tags for searching and correlating messages across systems.
+- **Span links**: new to me! Usually the trace parent propagates to new spans, but a span link starts a fresh trace that still references the original span. It's handy for events handled much later, like in a batch, without cluttering the APM UI.
+- **Metrics to watch**: queue depth, published/consumed counts and sizes, message age, in-flight latency, event type counts, and processing errors. If they drift, investigate.
 
-Notifying the user
+## Documentation and testing
 
-- Polling
-- Web Sockets / Server-Sent Events / Long polling (SignalR)
+Other teams need to find your events. **AsyncAPI** is the preferred spec, and [EventCatalog](https://www.eventcatalog.dev/) gives you a visual view of events with their producers and consumers. [Saunter](https://github.com/asyncapi/saunter) can generate AsyncAPI from .NET code, much like Swagger, and all of it is CI friendly.
 
-Versioning
+For testing:
 
-- Create new version of an event
-- Mark the older event as deprecated
-- Publish both versions for a while
-- Deprecate the older event as a predetermined and well know date
-  - Don't want to keep maintaining infinite versions
+- **Contract tests**: validate real event JSON against a JSON schema, and fail on breaking changes. If you need one, publish a new event version.
+- **Integration tests**: publish what the system under test would publish, and also write the events you expect to receive to the broker. That lets you test failures like a bad message format.
+- **Idempotency tests**: check that consumers handle duplicates, including duplicates with different IDs. For example, two OrderConfirmed messages for the same order could come from a bug in the publisher's outbox worker.
 
-Application Failures
+## Wrapping up
 
-- Durable storage of messages lets processes pick up where they left off
-- Process can get stuck with Choreography if one service is offline or erroring
-- Orchestration may be the fix
-
-## Orchestration
-
-What's it mean to me right now?
-
-- Process or workflow that publishes events and subscribes to responses
-- There are steps in the workflow that can be retried or compensated on error
-- Easier to debug that Choreography since it's a linear process
-
-Temporal
-
-- Supports many languages, .Net/Python/JS included
-- Visualize event-driven workflows on a timeline
-- Facilities to trigger outgoing events
-- Hooks to listen for incoming events
-- Time delays to wait for incoming events
-
-Orchestration enables async commands
-
-- Because you can wait as long as neeed
-- Can work around HTTP timeouts
-- Use a dedicated channel so they're not in the public event channel(s)
-
-Saga Pattern
-
-- A way to issue compensating actions
-- Avoids distributed transactions / 2 phase commits
-  - Which are objectively bad
-
-Adds a layer of complexity vs Choreography
-Useful withing a particular Bounded Context
-
-- When you need to handle compensating transactions, cancellation, etc
-
-## Observability in EDA
-
-Distributed tracing is the most important tool to understand an evolving EDA
-
-Context and Tags
-- There are lots of well-known `messaging.message.*` tags in OTel
-- Allows search and correlation between messages across systems
-- Can view downstream subscribers to a particular `event.v` name if they opt in to tracing
-
-Span Links
-- New info about OTel for me!
-- Trace parent is usually propagated to new spans, but you can skip that
-  - Use Span Link
-  - Results in a new Trace in the OTel viewer
-  - Useful to decouple event traces that will be handled much later, like in a batch
-  - Still references the previous span, but doesn't clutter UI
-
-Metrics / Alerting
-- Metrics to watch. If they change over time, something to look into
-  - Queue depth
-  - Count / size of published / consumed messages
-  - Message age
-  - In flight latency
-  - Event type count
-  - Processing error count
-
-Documentation
-- How do other teams know what events are available for consumption?
-- AsyncAPI is the preferred spec!
-  - Backstage is a way to build internal developer platforms
-  - EventCatalog give you a visual interface to events in your system
-    - Shows producers and consumers of a particular `event.v`
-  - Saunter is a .Net package that can generate AsyncAPI like Swagger is generated
-    - Customized with attributes
-    - That's why there's a separate publish method per event type instead of `<T>`
-  - This is all CI friendly
-
-Testing
-- Contract / Schema Testing
-  - Basic stuff
-    - Obtain event JSON (or whatever) from real prod code
-    - Use JsonSchema class to validate the event JSON
-    - Fail to flag breaking changes
-    - If you NEED to make a breaking change, new event version
-- Integration Testing
-  - Yes, publish events that the SUT would publish, ALSO
-  - Write events you expect to receive to the broker
-    - This way you can test happy path and failures like a bad message format
-- Failure Testing
-- Idempotency Testing
-  - Make sure consumers can handle duplicate events
-  - Check the unique id of the event
-  - Use business rules to make sure there's not a dupe event with diff ids
-    - Like a new message for the KitchenService with the same parent orderid
-    - This might result from a bug in the publisher's outbox worker
+The course made me appreciate how much of EDA is about the unglamorous parts: schemas, retries, idempotency, and being able to see what's going on. The pizza store is a great example of microservices working together to form a solution.
